@@ -39,6 +39,34 @@ class TestLinkedList(unittest.TestCase):
         item = self.s_list.find(item_to_find)
         self.assertIsNone(item)
 
+    def test_find_all_by_value(self):
+        node_one = Node(1)
+        node_two = Node(1)
+        # проверять будем id объектов
+        nodes_to_check = [node_one, node_two]
+        self.s_list.add_in_tail(Node(2))
+        self.s_list.add_in_tail(node_one)
+        self.s_list.add_in_tail(Node(3))
+        self.s_list.add_in_tail(Node(4))
+        self.s_list.add_in_tail(Node(5))
+        self.s_list.add_in_tail(node_two)
+        self.s_list.add_in_tail(Node(6))
+        fa = self.s_list.find_all(1)
+        self.assertEqual(len(nodes_to_check), len(fa))
+        for first, second in zip(fa, nodes_to_check):
+            self.assertTrue(first is second)
+
+    def test_not_find_all_by_value(self):
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(Node(2))
+        self.s_list.add_in_tail(Node(3))
+        self.s_list.add_in_tail(Node(4))
+        self.s_list.add_in_tail(Node(5))
+        self.s_list.add_in_tail(Node(6))
+        fa = self.s_list.find_all(9)
+        self.assertEqual(len(fa), 0)
+
+
     def test_delete_one_element_with_value(self):
         values = [2,2,4,4,4,2,2,4]
         item_to_remove = 4
@@ -83,7 +111,32 @@ class TestLinkedList(unittest.TestCase):
         self.assertIsNone(self.s_list.tail)
         self.assertEqual(self.s_list.len(), 0)
 
+    def test_insert_afternode_is_none(self):
+        newNode = Node('new')
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(Node(2))
+        self.s_list.add_in_tail(Node(3))
+        self.s_list.insert(None, newNode)
+        self.assertEqual(self.s_list.head, newNode)
 
+    def test_insert_in_empty_list(self):
+        newNode = Node('new')
+        self.s_list.insert(None, newNode)
+        self.assertEqual(self.s_list.head, newNode)
+        self.assertEqual(self.s_list.tail, newNode)
+    
+    def test_insert(self):
+        new_node = Node('new')
+        after_node = Node('afterNode')
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(after_node)
+        self.s_list.add_in_tail(Node(3))
+        self.s_list.insert(after_node, new_node)
+        node = self.s_list.head
+        while node is not None:
+            if node is after_node:
+                self.assertTrue(node.next is new_node)
+            node = node.next
 
 
 
