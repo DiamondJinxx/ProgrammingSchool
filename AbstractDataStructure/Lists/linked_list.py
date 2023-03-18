@@ -37,15 +37,25 @@ class LinkedList:
         return [] 
 
     def delete(self, val, all=False):
-        pass
-
-
+        node = self.head
+        prev_node = node
+        while node is not None:
+            if node.value == val:
+                prev_node.next = node.next
+                self.lengh = self.lengh - 1
+                if not all:
+                    return
+            prev_node = node
+            node = node.next
+                
     def clean(self):
-        pass 
+        self.head = None
+        self.tail = None 
 
     def len(self):
-        return 0 
+        return self.lengh 
 
     def insert(self, afterNode, newNode):
         pass
     
+
