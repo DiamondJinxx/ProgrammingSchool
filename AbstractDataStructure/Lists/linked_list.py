@@ -43,12 +43,22 @@ class LinkedList:
         return finding_items
 
     def delete(self, val, all=False):
-        if self.head.value == val:
-            self.head = self.head.next
-            if not all:
+        if self.is_empty():
+            return
+        if not all:
+            if self.head.value == val:
+                self.head = self.head.next
+                self.lengh = self.lengh - 1
                 return
-
-
+            node = self.head.next
+            prev_node = self.head
+            while node is not None:
+                if node.value == val:
+                    prev_node.next = node.next
+                    self.lengh = self.lengh - 1
+                    break
+                prev_node = node
+                node = node.next
 
         self.actual_tail() 
 
