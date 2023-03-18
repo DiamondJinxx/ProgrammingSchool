@@ -84,6 +84,7 @@ class TestLinkedList(unittest.TestCase):
         self.s_list.delete(item_to_remove, all=True)
         values = [ item for item in values if item != item_to_remove]
         self.assertEqual(len(values), self.s_list.len())
+        self.assertEqual(self.s_list.tail.value, 2)
 
     def test_delete_item_in_begin(self):
         self.s_list.add_in_tail(Node(1))
@@ -91,6 +92,27 @@ class TestLinkedList(unittest.TestCase):
         self.assertIsNone(self.s_list.head)
         self.assertIsNone(self.s_list.tail)
         self.assertEqual(self.s_list.len(), 0)
+
+    def test_delete_item_in_tail(self):
+        new_tail = Node(2)
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(new_tail)
+        self.s_list.add_in_tail(Node(3))
+        self.s_list.delete(3)
+        self.assertTrue(self.s_list.tail is new_tail)
+        self.assertEqual(self.s_list.len(), 2)
+
+    def test_delete_all_items(self):
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.delete(1, True)
+        self.assertEqual(self.s_list.len(), 0)
+        self.assertIsNone(self.s_list.head)
+        self.assertIsNone(self.s_list.tail)
 
     def test_lengh(self):
         self.s_list.add_in_tail(Node(1))
@@ -124,6 +146,7 @@ class TestLinkedList(unittest.TestCase):
         self.s_list.insert(None, newNode)
         self.assertEqual(self.s_list.head, newNode)
         self.assertEqual(self.s_list.tail, newNode)
+        self.assertEqual(self.s_list.len(), 1)
     
     def test_insert(self):
         new_node = Node('new')
@@ -131,12 +154,19 @@ class TestLinkedList(unittest.TestCase):
         self.s_list.add_in_tail(Node(1))
         self.s_list.add_in_tail(after_node)
         self.s_list.add_in_tail(Node(3))
+        old_list_len = self.s_list.len()
         self.s_list.insert(after_node, new_node)
         node = self.s_list.head
+        actual_tail: Node
         while node is not None:
             if node is after_node:
                 self.assertTrue(node.next is new_node)
+            if node.next is None:
+                actual_tail = node
             node = node.next
+        self.assertEqual(old_list_len + 1, self.s_list.len())
+        self.assertTrue(actual_tail is self.s_list.tail)
+        
 
     def test_insert_after_tail(self):
         new_node = Node('new')
@@ -145,7 +175,6 @@ class TestLinkedList(unittest.TestCase):
         self.s_list.add_in_tail(after_node)
         self.s_list.add_in_tail(Node(3))
         self.s_list.insert(self.s_list.tail, new_node)
-
         self.assertTrue(self.s_list.tail is new_node)
 
 
