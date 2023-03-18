@@ -71,6 +71,9 @@ class LinkedList:
             newNode.next = self.head
             self.head = newNode
             return
+        if afterNode == self.tail:
+            self.add_in_tail(newNode)
+            return
         node = self.head
         while node is not None:
             if node is afterNode:
@@ -78,6 +81,9 @@ class LinkedList:
                 node.next = newNode
                 return
             node = node.next
+            node = node.next
+                
+            node = node.next        
                 
 
     def __iter__(self):

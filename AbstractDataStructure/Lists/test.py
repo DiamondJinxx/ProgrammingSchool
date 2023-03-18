@@ -138,6 +138,15 @@ class TestLinkedList(unittest.TestCase):
                 self.assertTrue(node.next is new_node)
             node = node.next
 
+    def test_insert_after_tail(self):
+        new_node = Node('new')
+        after_node = Node('afterNode')
+        self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(after_node)
+        self.s_list.add_in_tail(Node(3))
+        self.s_list.insert(self.s_list.tail, new_node)
+
+        self.assertTrue(self.s_list.tail is new_node)
 
 
 
