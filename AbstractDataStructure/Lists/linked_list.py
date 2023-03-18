@@ -50,12 +50,11 @@ class LinkedList:
                 
     def clean(self):
         self.head = None
-        self.tail = None 
+        self.tail = None
+        self.lengh = 0
 
     def len(self):
         return self.lengh 
 
     def insert(self, afterNode, newNode):
         pass
-    
-
