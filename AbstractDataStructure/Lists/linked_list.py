@@ -43,36 +43,46 @@ class LinkedList:
         return finding_items
 
     def delete(self, val, all=False):
+        # help me :)
         if self.is_empty():
             return
         if not all:
             if self.head.value == val:
                 self.head = self.head.next
                 self.lengh = self.lengh - 1
+                if self.is_empty():
+                    self.clean()
                 return
-            node = self.head.next
             prev_node = self.head
+            node = prev_node.next
             while node is not None:
                 if node.value == val:
                     prev_node.next = node.next
                     self.lengh = self.lengh - 1
+                    if prev_node.next is None:
+                        self.tail = prev_node
                     break
                 prev_node = node
                 node = node.next
-
-        self.actual_tail() 
-
-
-    def actual_tail(self):
-        new_tail = self._get_real_tail()
-        self.tail = new_tail
-    
-    def _get_real_tail(self) -> Node:
-        node = self.head
-        while node is not None:
-            if node.next is None:
-                return node
-            node = node.next
+        else:
+            while self.head is not None and self.head.value == val:
+                self.head = self.head.next
+                self.lengh = self.lengh - 1
+            if self.head is None:
+                self.tail = None
+                return
+            prev_node = self.head
+            node = prev_node.next
+            while node is not None:
+                if node.value == val:
+                    prev_node.next = node.next
+                    self.lengh = self.lengh - 1
+                    if prev_node.next is None:
+                        self.tail = prev_node
+                    node = node.next
+                    continue
+                prev_node = node
+                node = node.next
                 
     def clean(self):
         self.head = None
@@ -102,12 +112,6 @@ class LinkedList:
                 node.next = newNode
                 self.lengh = self.lengh + 1
                 return
-            node = node.next
-
-    def __iter__(self):
-        node = self.head
-        while node is not None:
-            yield node
             node = node.next
 
     def is_empty(self):

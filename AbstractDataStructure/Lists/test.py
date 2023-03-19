@@ -1,6 +1,10 @@
 import unittest
 from linked_list import LinkedList, Node
 
+
+# получилли много больших тестов, частично пересекающихся,
+# как написать тесты так, чтобы их было меньше, а покрытие было больше? 
+# знать краевые случаи состояний своей программы?
 class TestLinkedList(unittest.TestCase):
     def setUp(self) -> None:
         self.s_list = LinkedList()
@@ -8,6 +12,7 @@ class TestLinkedList(unittest.TestCase):
     def test_constructor(self):
         self.assertIsNone(self.s_list.head)
         self.assertIsNone(self.s_list.tail)
+        self.assertEqual(self.s_list.lengh, 0)
 
     def test_insert_single_item(self):
         test_node = Node(15)
@@ -86,12 +91,14 @@ class TestLinkedList(unittest.TestCase):
         self.assertEqual(len(values), self.s_list.len())
         self.assertEqual(self.s_list.tail.value, 2)
 
-    def test_delete_item_in_begin(self):
+    def test_delete_item_in_head(self):
+        new_head = Node(2)
         self.s_list.add_in_tail(Node(1))
+        self.s_list.add_in_tail(new_head)
+        self.s_list.add_in_tail(Node(3))
         self.s_list.delete(1)
-        self.assertIsNone(self.s_list.head)
-        self.assertIsNone(self.s_list.tail)
-        self.assertEqual(self.s_list.len(), 0)
+        self.assertTrue(self.s_list.head is new_head)
+        self.assertEqual(self.s_list.len(), 2)
 
     def test_delete_item_in_tail(self):
         new_tail = Node(2)
