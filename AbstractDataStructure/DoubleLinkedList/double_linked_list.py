@@ -28,16 +28,28 @@ class LinkedList2:
         self.lengh += 1
 
     def find(self, val):
-        return None # здесь будет ваш код
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                return node
+            node = node.next
 
     def find_all(self, val):
-        return [] # здесь будет ваш код
+        nodes = []
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                nodes.append(node)
+            node = node.next
+        return nodes
 
     def delete(self, val, all=False):
         pass # здесь будет ваш код
 
     def clean(self):
-        pass # здесь будет ваш код
+        self.head = None
+        self.tail = None
+        self.lengh = None
 
     def len(self):
         return self.lengh
