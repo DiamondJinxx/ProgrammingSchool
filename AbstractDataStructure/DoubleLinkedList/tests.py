@@ -109,7 +109,24 @@ class TestLinkedList2(unittest.TestCase):
 
 
     def test_delete(self):
-        pass
+        node_to_delete = Node(4)
+        node = Node(2)
+        node_before = Node(3)
+        node_after = Node(5)
+        self.ll.add_in_tail(Node(1))
+        self.ll.add_in_tail(node)
+        self.ll.insert(node, node_before)
+        self.ll.insert(node_before, node_to_delete)
+        self.ll.insert(node_to_delete, node_after)
+        self.ll.add_in_tail(Node(7))
+        self.ll.add_in_tail(Node(8))
+
+        old_len = self.ll.len()
+        self.ll.delete(node_to_delete.value)
+
+        self.assertEqual(self.ll.len(), old_len - 1)
+        self.assertTrue(node_before.next is node_after)
+        self.assertTrue(node_after.prev is node_before)
 
     def test_delete_in_head(self):
         pass

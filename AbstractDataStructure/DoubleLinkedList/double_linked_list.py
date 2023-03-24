@@ -91,7 +91,10 @@ class LinkedList2:
             if node is afterNode:
                 newNode.next = node.next
                 newNode.prev = node
-                node.next.prev = newNode
+                if node.next is not None:
+                    node.next.prev = newNode
+                else:
+                    self.tail = newNode
                 node.next = newNode
                 self.__inc_len()
                 return
