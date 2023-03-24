@@ -25,7 +25,7 @@ class LinkedList2:
             self.tail.next = item
             item.prev = self.tail
         self.tail = item
-        self.lengh += 1
+        self.__inc_len()
 
     def find(self, val):
         node = self.head
@@ -44,7 +44,32 @@ class LinkedList2:
         return nodes
 
     def delete(self, val, all=False):
-        pass # здесь будет ваш код
+        if self.is_empty():
+            return
+        
+        while self.head.value == val:
+            self.head.next.prev = None
+            self.head = self.head.next
+            self.__dec_len()
+            if not all:
+                return
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                self.__dec_len()
+                if node.next is None:
+                    node.prev.next = None
+                    self.tail = node.prev
+                    return
+
+                node.next.prev = node.prev
+                node.prev.next = node.next
+                if node.prev.next is None:
+                    self.tail = node.prev
+                if not all:
+                    return
+            node = node.next
+            
 
     def clean(self):
         self.head = None
@@ -68,6 +93,7 @@ class LinkedList2:
                 newNode.prev = node
                 node.next.prev = newNode
                 node.next = newNode
+                self.__inc_len()
                 return
             node = node.next
 
@@ -78,7 +104,13 @@ class LinkedList2:
         self.head.prev = newNode
         newNode.next = self.head
         self.head = newNode
-        self.lengh += 1
+        self.__inc_len()
 
     def is_empty(self):
         return self.len() == 0
+    
+    def __inc_len(self):
+        self.lengh += 1
+
+    def __dec_len(self):
+        self.lengh -= 1

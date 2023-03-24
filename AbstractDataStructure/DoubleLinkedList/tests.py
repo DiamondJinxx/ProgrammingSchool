@@ -131,11 +131,48 @@ class TestLinkedList2(unittest.TestCase):
         self.assertEqual(self.ll.len(), 0)
 
     def test_insert(self):
-        pass
+        after_node = Node('after')
+        old_node = Node('old after')
+        new_node = Node('new node')
+        self.ll.add_in_tail(Node(1))
+        self.ll.add_in_tail(Node(1))
+        self.ll.add_in_tail(Node(8))
+        self.ll.add_in_tail(Node(1))
+        self.ll.add_in_tail(Node(1))
+        self.ll.add_in_tail(Node(5))
+        self.ll.add_in_tail(after_node)
+        self.ll.add_in_tail(old_node)
+        self.ll.add_in_tail(Node(3))
+        self.ll.add_in_tail(Node(8))
+        self.ll.add_in_tail(Node(1))
+        old_len = self.ll.len()
+
+        self.ll.insert(after_node, new_node)
+
+        self.assertEqual(self.ll.len(), old_len+1)
+        self.assertTrue(after_node.next is new_node)
+        self.assertTrue(old_node.prev is new_node)
+        self.assertTrue(new_node.next is old_node)
+        self.assertTrue(new_node.prev is after_node)
+
 
     def test_insert_empty_list(self):
-        pass
+        new_node = Node('new node')
+        self.ll.insert(None, new_node)
+
+        self.assertEqual(self.ll.len(), 1)
+        self.assertTrue(new_node.next is None)
+        self.assertTrue(new_node.prev is None)
+        self.assertTrue(self.ll.head is new_node)
+        self.assertTrue(self.ll.tail is new_node)
 
     def test_insert_afternode_is_none_full_list(self):
-        pass
+        old_node = Node('old')
+        self.ll.add_in_tail(old_node)
+        new_node = Node('new node')
+        self.ll.insert(None, new_node)
 
+        self.assertTrue(self.ll.head is old_node)
+        self.assertTrue(self.ll.tail is new_node)
+        self.assertTrue(self.ll.head.next is new_node)
+        self.assertTrue(self.ll.tail.prev is old_node)
