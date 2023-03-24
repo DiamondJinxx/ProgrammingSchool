@@ -47,8 +47,11 @@ class LinkedList2:
         if self.is_empty():
             return
         
-        while self.head.value == val:
-            self.head.next.prev = None
+        while self.head is not None and self.head.value == val:
+            if self.head.next is not None:
+                self.head.next.prev = None
+            else:
+                self.tail = None
             self.head = self.head.next
             self.__dec_len()
             if not all:
@@ -69,6 +72,7 @@ class LinkedList2:
                 if not all:
                     return
             node = node.next
+        self.tail = None if self.head is None else self.tail
             
 
     def clean(self):

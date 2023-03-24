@@ -129,13 +129,66 @@ class TestLinkedList2(unittest.TestCase):
         self.assertTrue(node_after.prev is node_before)
 
     def test_delete_in_head(self):
-        pass
+        old_head = Node('old_head')
+        new_head = Node('new_head')
+        tail = Node('tail')
+        self.ll.add_in_tail(old_head)
+        self.ll.add_in_tail(new_head)
+        self.ll.add_in_tail(tail)
+        old_len = self.ll.len()
+
+        self.ll.delete(old_head.value)
+        self.assertEqual(self.ll.len(), old_len - 1)
+        self.assertTrue(self.ll.head is new_head)
+        self.assertIsNone(self.ll.head.prev)
 
     def test_delete_in_tail(self):
-        pass
+        head = Node('head')
+        new_tail = Node('new_tail')
+        old_tail = Node('old_tail')
+        self.ll.add_in_tail(head)
+        self.ll.add_in_tail(new_tail)
+        self.ll.add_in_tail(old_tail)
+        old_len = self.ll.len()
 
-    def test_detelete_all(self):
-        pass
+        self.ll.delete(old_tail.value)
+
+        self.assertEqual(self.ll.len(), old_len - 1)
+        self.assertTrue(self.ll.tail is new_tail)
+        self.assertIsNone(self.ll.tail.next)
+
+
+    def test_detelete_all_list(self):
+        for i in range(10):
+            self.ll.add_in_tail(Node(1))
+        old_new = self.ll.len()
+        
+        self.ll.delete(1, True)
+
+        self.assertEqual(self.ll.len(), 0)
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
+
+    def test_detelete_all_elements(self):
+        for i in range(10):
+            self.ll.add_in_tail(Node(1))
+        not_delete = Node('not_delete')
+        self.ll.add_in_tail(not_delete)
+        for i in range(10):
+            self.ll.add_in_tail(Node(1))
+
+        self.ll.delete(1, True)
+        self.assertEqual(self.ll.len(), 1)
+        self.assertTrue(self.ll.head is not_delete)
+        self.assertTrue(self.ll.tail is not_delete)
+
+    def test_delete_list_is_one_element(self):
+        self.ll.add_in_tail(Node(2))
+        self.ll.delete(2)
+
+        self.assertEqual(self.ll.len(), 0)
+        self.assertIsNone(self.ll.head)
+        self.assertIsNone(self.ll.tail)
 
     def test_clean(self):
         for i in range(10):
