@@ -49,13 +49,36 @@ class LinkedList2:
     def clean(self):
         self.head = None
         self.tail = None
-        self.lengh = None
+        self.lengh = 0
 
     def len(self):
         return self.lengh
 
     def insert(self, afterNode, newNode):
-        pass # здесь будет ваш код
+        if afterNode is None and self.is_empty():
+            self.add_in_head(newNode)
+            return
+        if afterNode is None and not self.is_empty():
+            self.add_in_tail(newNode)
+            return
+        node = self.head
+        while node is not None:
+            if node is afterNode:
+                newNode.next = node.next
+                newNode.prev = node
+                node.next.prev = newNode
+                node.next = newNode
+                return
+            node = node.next
 
     def add_in_head(self, newNode):
-        pass # здесь будет ваш код
+        if self.head is None:
+            self.add_in_tail(newNode)
+            return
+        self.head.prev = newNode
+        newNode.next = self.head
+        self.head = newNode
+        self.lengh += 1
+
+    def is_empty(self):
+        return self.len() == 0
