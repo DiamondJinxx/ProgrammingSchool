@@ -13,6 +13,7 @@ class TestDynamicArray(unittest.TestCase):
         da.insert(0, 'new_item')
         self.assertEqual(da[0], 'new_item')
         self.assertEqual(old_capacity, da.capacity)
+        self.assertEqual(da.count, 11)
 
     def test_insert_capacity_grow(self):
         da = DynArray()
@@ -40,6 +41,7 @@ class TestDynamicArray(unittest.TestCase):
         da.delete(0)
         self.assertEqual(da[0], 2)
         self.assertEqual(old_capacity, da.capacity)
+        self.assertEqual(da.count, 13)
     
     def test_delete_capacity_changed(self):
         da = DynArray()
