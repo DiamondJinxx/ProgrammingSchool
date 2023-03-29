@@ -26,7 +26,6 @@ class DynArray:
 
     def resize(self, new_capacity):
         new_array = self.make_array(new_capacity)
-        print('resize')
         for i in range(self.count):
             new_array[i] = self.array[i]
         self.array = new_array
@@ -46,7 +45,7 @@ class DynArray:
             return
         if self.count + 1 >= self.capacity:
             self.resize(increase*self.capacity)
-        for j in range(self.count, i - 1, -1):
+        for j in range(self.count, i, -1):
             self.array[j] = self.array[j - 1]
         self.array[i] = itm
         self.count += 1
