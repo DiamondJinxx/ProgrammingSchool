@@ -52,4 +52,19 @@ class DynArray:
         
 
     def delete(self, i):
-        pass
+        if i < 0 or i > self.count:
+            raise IndexError('Index is out of bounds')
+        if self.is_empty():
+            return
+        diff = 0
+        for j in range(0, self.count - 1):
+            try:
+                if j == i:
+                    diff += 1
+                self.array[j] = self.array[j + diff]
+            except Exception as e:
+                print(f'{j} : ' + str(e))
+        self.count -= 1
+    
+    def is_empty(self):
+        return self.count == 0
