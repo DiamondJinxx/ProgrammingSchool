@@ -58,13 +58,15 @@ class DynArray:
             return
         diff = 0
         for j in range(0, self.count - 1):
-            try:
-                if j == i:
-                    diff += 1
-                self.array[j] = self.array[j + diff]
-            except Exception as e:
-                print(f'{j} : ' + str(e))
+            if j == i:
+                diff += 1
+            self.array[j] = self.array[j + diff]
         self.count -= 1
+        if self.count < int(self.capacity / 2):
+            new_capacity = int(self.capacity / decrease)
+            if new_capacity < DynArray.__min_capacity:
+                new_capacity = DynArray.__min_capacity
+            self.resize(new_capacity)
     
     def is_empty(self):
         return self.count == 0
