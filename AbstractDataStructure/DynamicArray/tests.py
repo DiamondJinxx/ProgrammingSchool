@@ -60,3 +60,8 @@ class TestDynamicArray(unittest.TestCase):
             da.append(i)
         with self.assertRaises(IndexError):
             da.delete(20)
+
+    def test_delete_from_empty_array(self):
+        da = DynArray()
+        with self.assertRaises(IndexError):
+            da.delete(0)
