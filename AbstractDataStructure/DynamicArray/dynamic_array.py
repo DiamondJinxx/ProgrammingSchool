@@ -1,12 +1,10 @@
 import ctypes
 
 
-decrease = 1.5
-increase = 2
-
-
 class DynArray:
     __min_capacity = 16
+    __decrease = 1.5
+    __increase = 2
     
     def __init__(self):
         self.count = 0
@@ -33,7 +31,7 @@ class DynArray:
 
     def append(self, itm):
         if self.count == self.capacity:
-            self.resize(increase*self.capacity)
+            self.resize(DynArray.__increase * self.capacity)
         self.array[self.count] = itm
         self.count += 1
 
@@ -44,7 +42,7 @@ class DynArray:
             self.append(itm)
             return
         if self.count + 1 >= self.capacity:
-            self.resize(increase*self.capacity)
+            self.resize(DynArray.__increase * self.capacity)
         for j in range(self.count, i, -1):
             self.array[j] = self.array[j - 1]
         self.array[i] = itm
@@ -62,10 +60,10 @@ class DynArray:
                 diff += 1
             self.array[j] = self.array[j + diff]
         self.count -= 1
+        new_capacity = int(self.capacity / DynArray.__decrease)
+        if new_capacity < DynArray.__min_capacity:
+            new_capacity = DynArray.__min_capacity
         if self.count < int(self.capacity / 2):
-            new_capacity = int(self.capacity / decrease)
-            if new_capacity < DynArray.__min_capacity:
-                new_capacity = DynArray.__min_capacity
             self.resize(new_capacity)
     
     def is_empty(self):
