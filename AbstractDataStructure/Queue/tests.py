@@ -8,7 +8,7 @@ class QueueTests(unittest.TestCase):
         
         expected_item = 123
         queue.enqueue(expected_item)
-        self.assertEqual(queue.data[0], expected_item)
+        self.assertEqual(queue.stack_one.stack[0], expected_item)
 
     def test_dequeue(self):
         queue = Queue()

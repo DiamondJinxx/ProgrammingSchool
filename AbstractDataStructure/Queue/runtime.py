@@ -10,7 +10,11 @@ queue = Queue()
 for i in l:
     queue.enqueue(i)
 print(queue.data)
-queue.rotate(12)
+print(queue.dequeue())
+for i in range(8):
+    queue.enqueue(i)
 print(queue.data)
-queue.rotate(-4)
+queue.rotate(1)
 print(queue.data)
+# queue.rotate(-4)
+# print(queue.data)
