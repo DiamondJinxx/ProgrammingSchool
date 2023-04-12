@@ -14,4 +14,10 @@ class Queue:
     def is_empty(self) -> bool:
         return self.size() == 0
     
+    def rotate(self, times: int):
+        if self.is_empty():
+            return
+        times = times % self.size()
+        self.data = self.data[times:] + self.data[:times]
+    
 # task 6.2: enqueue - o(1), dequeue - O(n) I think
