@@ -87,6 +87,8 @@ class LinkedList2:
         result = self.head
         self.head = self.head.next
         self.__dec_len()
+        if self.is_empty():
+            self.clean()
         return result
 
     def add_tail(self, item):
@@ -100,6 +102,8 @@ class LinkedList2:
         result = self.tail
         self.tail = self.tail.prev
         self.__dec_len()
+        if self.is_empty():
+            self.clean()
         return result
 
     def clean(self):
