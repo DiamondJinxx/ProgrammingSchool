@@ -76,6 +76,32 @@ class LinkedList2:
             node = node.next
         self.tail = None if self.head is None else self.tail
 
+    def add_front(self, item):
+        self.add_in_head(item)
+    
+    def remove_front(self):
+        if self.is_empty():
+            return None
+        if self.head.next is not None:
+            self.head.next.prev = None
+        result = self.head
+        self.head = self.head.next
+        self.__dec_len()
+        return result
+
+    def add_tail(self, item):
+        self.add_in_tail(item)
+
+    def remove_tail(self):
+        if self.is_empty():
+            return None
+        if self.tail.prev is not None:
+            self.tail.prev.next = None
+        result = self.tail
+        self.tail = self.tail.prev
+        self.__dec_len()
+        return result
+
     def clean(self):
         self.head = None
         self.tail = None
