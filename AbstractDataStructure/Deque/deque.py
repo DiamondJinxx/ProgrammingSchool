@@ -17,6 +17,7 @@ class LinkedList2:
             node = node.next
 
     def add_in_tail(self, item):
+        item = Node(item)
         if self.head is None:
             self.head = item
             item.next = None
@@ -87,7 +88,9 @@ class LinkedList2:
         result = self.head
         self.head = self.head.next
         self.__dec_len()
-        return result
+        if self.is_empty():
+            self.clean()
+        return result.value
 
     def add_tail(self, item):
         self.add_in_tail(item)
@@ -100,7 +103,9 @@ class LinkedList2:
         result = self.tail
         self.tail = self.tail.prev
         self.__dec_len()
-        return result
+        if self.is_empty():
+            self.clean()
+        return result.value
 
     def clean(self):
         self.head = None
@@ -136,6 +141,7 @@ class LinkedList2:
         if self.head is None:
             self.add_in_tail(newNode)
             return
+        newNode = Node(newNode)
         self.head.prev = newNode
         newNode.next = self.head
         self.head = newNode
@@ -169,4 +175,20 @@ class Deque:
     
     def size(self):
         return self.data.len()
+
+    def front(self):
+        front = self.data.head.value if self.data.head is not None else None
+        return front
     
+    def tail(self):
+        tail = self.data.tail.value if self.data.tail is not None else None
+        return tail
+    
+    #TODO: REMOVE
+    def debug(self):
+        head = self.data.head
+        tail = self.data.tail
+        print(f'head: {head.value if head is not None else None}')
+        print(f'tail: {tail.value if tail is not None else None}')
+        print(f'size: {self.size()}')
+        self.data.print_all_nodes()
