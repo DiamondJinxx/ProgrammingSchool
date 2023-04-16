@@ -183,12 +183,16 @@ class Deque:
     def tail(self):
         tail = self.data.tail.value if self.data.tail is not None else None
         return tail
-    
-    #TODO: REMOVE
-    def debug(self):
-        head = self.data.head
-        tail = self.data.tail
-        print(f'head: {head.value if head is not None else None}')
-        print(f'tail: {tail.value if tail is not None else None}')
-        print(f'size: {self.size()}')
-        self.data.print_all_nodes()
+
+def is_palindrome(line: str) -> bool:
+    deq = Deque()
+    for char in line:
+        deq.addTail(char)
+    while deq.size() > 0:
+        head = deq.removeFront()
+        tail = deq.removeTail()
+        if tail is None:
+            return True
+        if head != tail:
+            return False
+    return True
