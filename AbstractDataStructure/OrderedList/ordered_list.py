@@ -72,10 +72,10 @@ class OrderedList:
         self.__inc_size()
 
     def find(self, val):
-        return None # здесь будет ваш код
+        return None
 
     def delete(self, val):
-        pass # здесь будет ваш код
+        pass
 
     def clean(self, asc):
         self.__ascending = asc
