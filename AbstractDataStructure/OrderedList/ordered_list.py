@@ -38,7 +38,7 @@ class OrderedList:
             return
 
         node = self.head
-        while node.next is not None:
+        while node is not None:
             if self.compare(node.value, value) == 0: # can remove if use 
                 self.__insert_after(node, new_node)
                 return
@@ -47,8 +47,9 @@ class OrderedList:
                 self.__insert_after(node, new_node)
                 return
             if not self.__ascending and self.compare(value, node.value) == -1 and self.compare(value, node.next.value) == 1:
-                self.__insert_after()
+                self.__insert_after(node, new_node)
                 return
+            node = node.next
 
     def __insert_before(self, before_node, new_node):
         new_node.prev = before_node.prev
@@ -89,6 +90,14 @@ class OrderedList:
         node = self.head
         while node != None:
             r.append(node)
+            node = node.next
+        return r
+    
+    def get_all_value(self):
+        r = []
+        node = self.head
+        while node != None:
+            r.append(node.value)
             node = node.next
         return r
     
