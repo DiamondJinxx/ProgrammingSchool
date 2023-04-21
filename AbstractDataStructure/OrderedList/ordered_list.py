@@ -72,10 +72,46 @@ class OrderedList:
         self.__inc_size()
 
     def find(self, val):
-        return None
+        finded = None
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                finded = node
+                break
+            if self.__ascending and node.value > val or not self.__ascending and node.value < val:
+                finded = node
+                break
+            node = node.next
+        return finded
 
     def delete(self, val):
-        pass
+        if self.head is None:
+            return
+        if self.head.value == val and self.head.next is not None:
+            self.head.next.prev = None
+            self.head = self.head.next
+            self.__dec_size()
+            return 
+        if self.head.value == val:
+            self.head = None
+            self.__dec_size()
+        node = self.head
+        while node is not None:
+            if node.value != val:
+                node = node.next
+                continue
+            self.__dec_size()
+            if node.next is None:
+                node.prev.next = None
+                self.tail = node.prev
+                return
+
+            node.next.prev = node.prev
+            node.prev.next = node.next
+            if node.prev.next is None:
+                self.tail = node.prev
+            return
+        self.tail = None if self.head is None else self.tail
 
     def clean(self, asc):
         self.__ascending = asc
