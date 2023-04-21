@@ -29,15 +29,26 @@ class OrderedList:
             self.tail = new_node
             self.__inc_size()
             return
-        node = self.head
-        while node is not None:
-            if self.compare(node.value, value) == 0:
-                self.__insert_after(node, new_node)
-                return
-            if self.compare(value, node.value) == 1 and self.__ascending == True:
-                self.__insert_after(node, new_node)
-                return
+        
+        if self.__ascending and self.compare(value, self.head.value) == -1 or not self.__ascending and self.compare(value, self.head.value) == 1:
+            self.__insert_before(self.head, new_node)
+            return
+        if self.__ascending and self.compare(value, self.tail.value) == 1 or not self.__ascending and self.compare(value, self.tail.value) == -1:
+            self.__insert_after(self.tail, new_node)
+            return
 
+        node = self.head
+        while node.next is not None:
+            if self.compare(node.value, value) == 0: # can remove if use 
+                self.__insert_after(node, new_node)
+                return
+            
+            if self.__ascending and self.compare(value, node.value) == 1 and self.compare(value, node.next.value) < 0:
+                self.__insert_after(node, new_node)
+                return
+            if not self.__ascending and self.compare(value, node.value) == -1 and self.compare(value, node.next.value) == 1:
+                self.__insert_after()
+                return
 
     def __insert_before(self, before_node, new_node):
         new_node.prev = before_node.prev
@@ -46,7 +57,8 @@ class OrderedList:
             before_node.prev.next = new_node
         else:
             self.head = new_node
-        before_node.prev = new_node        
+        before_node.prev = new_node   
+        self.__inc_size()     
 
     def __insert_after(self, after_node, new_node):
         new_node.prev = after_node
