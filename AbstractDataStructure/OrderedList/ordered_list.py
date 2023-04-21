@@ -9,6 +9,7 @@ class OrderedList:
         self.head = None
         self.tail = None
         self.__ascending = asc
+        self.size = 0
 
     def compare(self, v1, v2):
         cmp = 0
@@ -38,7 +39,7 @@ class OrderedList:
         self.tail = None 
 
     def len(self):
-        return 0 # здесь будет ваш код
+        return self.size
 
     def get_all(self):
         r = []
@@ -47,6 +48,12 @@ class OrderedList:
             r.append(node)
             node = node.next
         return r
+    
+    def __inc_size(self):
+        self.size += 1
+
+    def __dec_size(self):
+        self.size -= 1
 
 class OrderedStringList(OrderedList):
     def __init__(self, asc):
