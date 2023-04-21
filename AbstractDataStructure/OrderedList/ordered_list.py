@@ -23,9 +23,40 @@ class OrderedList:
         # +1 if v1 > v2
 
     def add(self, value):
-        pass
-        # автоматическая вставка value 
-        # в нужную позицию
+        new_node = Node(value)
+        if self.head is None:
+            self.head = new_node
+            self.tail = new_node
+            self.__inc_size()
+            return
+        node = self.head
+        while node is not None:
+            if self.compare(node.value, value) == 0:
+                self.__insert_after(node, new_node)
+                return
+            if self.compare(value, node.value) == 1 and self.__ascending == True:
+                self.__insert_after(node, new_node)
+                return
+
+
+    def __insert_before(self, before_node, new_node):
+        new_node.prev = before_node.prev
+        new_node.next = before_node
+        if before_node.prev is not None:
+            before_node.prev.next = new_node
+        else:
+            self.head = new_node
+        before_node.prev = new_node        
+
+    def __insert_after(self, after_node, new_node):
+        new_node.prev = after_node
+        new_node.next = after_node.next
+        if after_node.next is not None:
+            after_node.next.prev = new_node
+        else:
+            self.tail = new_node
+        after_node.next = new_node
+        self.__inc_size()
 
     def find(self, val):
         return None # здесь будет ваш код
