@@ -79,11 +79,10 @@ class OrderedList:
                 finded = node
                 break
             if self.__ascending and node.value > val or not self.__ascending and node.value < val:
-                finded = node
                 break
             node = node.next
         return finded
-
+    
     def delete(self, val):
         if self.head is None:
             return
