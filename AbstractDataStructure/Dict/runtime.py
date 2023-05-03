@@ -7,4 +7,8 @@ def debug(d: NativeDictionary) -> None:
 
 
 d = NativeDictionary(20)
+d.put('Dima', 23)
 debug(d)
+d.put('Dima', 24)
+debug(d)
+print(d.is_key('Dima123'))
