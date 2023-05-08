@@ -1,41 +1,54 @@
-# наследуйте этот класс от HashTable
-# или расширьте его методами из HashTable
 class PowerSet:
 
     def __init__(self):
-        # ваша реализация хранилища
+        self.data = []
 
     def size(self):
-        return 0
-        # количество элементов в множестве
+        return len(self.data)
 
     def put(self, value):
-        # всегда срабатывает
+        if not self.get(value):
+            self.data.append(value)
 
     def get(self, value):
-        # возвращает True если value имеется в множестве,
-        # иначе False
-        return False
+        return value in self.data
 
     def remove(self, value):
-        # возвращает True если value удалено
-        # иначе False
-        return False
+        result = False
+        if self.get(value):
+            self.data.remove(value)
+            result = True 
+        return result
 
     def intersection(self, set2):
-        # пересечение текущего множества и set2
-        return None 
+        result = PowerSet()
+        biger_set = self if self.size() > set2.size() else set2
+        lower_set = self if self.size() < set2.size() else set2
+        for item in biger_set:
+            if lower_set.get(item):
+                result.put(item)
+        return result 
 
     def union(self, set2):
-        # объединение текущего множества и set2
-        return None
+        result = PowerSet()
+        for item in self.data:
+            result.put(item)
+        for item in set2.data:
+            result.put(item)
+        return result
 
     def difference(self, set2):
-        # разница текущего множества и set2
-        return None
+        result = PowerSet()
+        for item in self.data:
+            if not set2.get(item):
+                result.put(item) 
+        return result
 
     def issubset(self, set2):
-        # возвращает True, если set2 есть
-        # подмножество текущего множества,
-        # иначе False
-        return False
+        for item in set2:
+            if not self.get(item):
+                return False
+        return True
+
+    def __iter__(self):
+        return iter(self.data)
