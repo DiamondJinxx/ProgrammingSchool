@@ -44,10 +44,7 @@ class NativeCache:
             return self.values[index]
         return None
 
-
     def _reset(self, index):
         self.values[index] = None
         self.slots[index] = None
         self.hits[index] = 0
-
-    
