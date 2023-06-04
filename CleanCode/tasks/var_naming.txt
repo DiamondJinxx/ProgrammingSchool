@@ -1,10 +1,12 @@
-result - candidates_collection // выборка кандидатов
-sums - sequence_sum // сумма арифметической последовательности
-sParallel - parallel_signal_data // параллельна составляющая сигнала
-sPerped - perpendicular_signal_data // перпендикулярная составляющая сигнала
+result - candidates_collection 			      // выборка кандидатов
+sums - sequence_sum 				      // сумма арифметической последовательности
+sParallel - parallel_signal_data 		      // параллельна составляющая сигнала
+sPerped - perpendicular_signal_data 		      // перпендикулярная составляющая сигнала
 minIndexPar - index_of_minimun_value_in_parallel_data // индекс минимального элемента в параллельной составляющей
-filtration - list_filter // фильтр списочного метода
-additions - additional_fields // дополнительный поля
-external - candidate_external_ids // внешние идентификаторы кандидата
-
-
+filtration - list_filter 			      // фильтр списочного метода
+additions - additional_fields 			      // дополнительный поля
+external - candidate_external_ids 		      // внешние идентификаторы кандидата
+vacancies - vacansies_ids 			      // идентификаторы вакансии
+prc_result - processig_result 			      // результат обработки данных
+attachments - candidate_attachments		      // вложения кандидата
+data - external_document_data 			      // данные внешнего документа
