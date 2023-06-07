@@ -1,0 +1,25 @@
+6.1 
+categories - external_categories  // внешние категории
+fields - candidate_fields         // поля кандидата
+options - builder_options         // опции "Строителя"
+key - candidate_key               // идентификатор кандитата
+result - canddiate_statistics     // Статистика по кандидату
+
+
+6.2
+HistoryRegistrar - HistoryRegistrarSingleton // Регистратор синглтона для работы с историчностью сущности
+FindType - FindStrategy                      // Стратегия поиска кандидата
+Manager - AsyncInvokeManager                 // Менеджер асинхронных запросов
+MenuItemsBank - UIItemsStorageFactory        // фабрика хранилища интерфейсных элементов
+
+6.3
+category - candidate_category    // категории могут быть не только у кандидата
+responsible - event_responsible  // вне контекста работы с событиями ответственный может быть у чего угодно
+commentary - event_commentary    // вне контекста работы с событиями комментарий может быть у чего угодно
+
+6.4
+msg_fmt - message_format                 // Формат сообщения
+idx - separator_index                    // индекс разделителя
+exc - exception                          // объект исключения
+candidates_with_category - with_category // кандидаты с категорией, использовать в контексте запроса/работы с кандидатами
+cndt_ext - candidate_extension           // расширение кандидата        
