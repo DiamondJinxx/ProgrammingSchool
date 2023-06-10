@@ -1,0 +1,24 @@
+7.1
+result     - is_calculation_complete
+balanced   - is_balanced
+same       - is_same
+log        - need_log
+error_flag - error
+
+7.2
+found - поиск элемента в коллекции
+is_success - удачно завершили обновление данных
+done - завершили миграцию
+
+7.3
+for i in range(len(numbers)) - for number in numbers - число в списке чисел
+
+
+7.4
+left/right - для метода двух указателей в решении алгозадачек
+begin/end  - для обозначения диапазона дат
+
+7.5
+idx - delimiter_index - индекс разделителя в строке
+p   - prev - предыдущий элемент в списке
+r   - root - корневой элемент дерева
