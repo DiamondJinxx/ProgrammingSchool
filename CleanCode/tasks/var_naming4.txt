@@ -1,0 +1,12 @@
+sum0 - begining_sum_of_medians
+l - left_position
+max - max_value_in_collection
+current_regulations_list - current_regulations
+time - curent_time
+cursor - not_processed_chunks_cursor
+fphase - phase_from
+tphase - phase_to
+candidate - candidate_pk
+enquiries_group - enquiries
+category - user_category
+count - count_of_records
