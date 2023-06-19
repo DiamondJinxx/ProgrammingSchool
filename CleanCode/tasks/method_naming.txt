@@ -1,0 +1,12 @@
+CandidateRegistry.candidates_with_categories - CandidateRegistry.with_categories - кандидаты с категориями, я периодически нахожу более лаконичным не указывать префикс get - в команде заметили, что читаемость не снижается
+checked - is_checked - флаг прочитанного сообщения в переписке
+publish - is_published - флаг публикации вакансии на работном источнике
+__empty_result - __set_empty_result - установить пустой результат в выходных значениях
+_input_data - _prepare_input_data - подготовить входные значения к дальнейшей работе
+_parse_negotiation - _parse_negotiation_info_if_exist - спарсить информация об отклике с рабочего источника, если она существует
+sex - candidate_gender - получить пол соискателя
+__check_source - __check_source_for_publication - проверить возможность публикации на источнике
+_build_request - _build_request_data_by_filter - сформирование данные для запроса в БД на основе фильтра
+_async_tasks - _start_async_tasks - запуск асинхонных задач 
+_add_to_collection - _enrich_collections_record - обогатить записи дополнительнеми данными
+result_status - set_result_status - добавить статус выполнения операции в ответ сервера
