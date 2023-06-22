@@ -1,0 +1,10 @@
+3.1
+Record.from_object(Union[dict, Record])
+RecordSet.from_list(list)
+Navigation.safe_init(Union[Navigation, dict])
+3.2
+BaseList
+ListComputer
+Formatter
+Beautifier
+ListFactory
