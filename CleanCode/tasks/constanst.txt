@@ -1,0 +1,12 @@
+Status.IN_PROGRESS - ввел константу вместо значения 0
+Status.ACCEPT - ввел константу вместо значения 1
+Status.REJECT - ввел константу вместо значения 2
+ContactType.CALL - ввел константу вместо значения 0
+ContactType.METTING - ввел константу вместо значения 1
+ContactType.PHONE - ввел константу вместо значения 2
+ContactType.EMAIL - ввел константу вместо значения 3
+ContactType.INTERVIEW - ввел константу вместо значения 4
+Portals.HH - ввел константу вместо значения 6
+Portal.SUPER_JOB - ввел константу вместо значения 4
+HistoryObject - HISTORY_OBJECT_NAME - исправил стиль и дал более конкретное имя
+HistoryInstance - HISTORY_INSTANCE_ID - исправил стиль и дал более конкретное имя
