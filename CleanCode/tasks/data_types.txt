@@ -1,0 +1,12 @@
+'input_data.txt' - test_data_file_name - добавил переменную для имени файла с тестовыми данными
+record.Переход is None - is_planned - ввел переменную для обозначения запланированного события
+old_record and record.ФазаСледствие != old_record.ФазаСледствие - change_transition - ввел перемнную для обозначения изменения перехода при обновлении
+current / all_candidates - int(current / all_candidates) - явно привел к целочисленному типу дробный результат операции
+candidates_for_period > all_candidates - int(candidates_for_period) > all_candidates - явно привел дробное значение к целочисленному
+navigation.limit < len(collection) - has_more - ввел переменную для проверки наличия данных для следующего запроса
+get_client_rights_for_document() != Rights.WRITE.value - restricted - ввел переменную для обозначения ограничения по правам
+'Staff' - BL_MODULE_NAME - ввел константу для наименования модуля
+'candidates' - TAG_TYPE - ввел константу для типа тегов
+'crm_funnel' - SOURCE_TYPE - ввел константу для типа источника
+endpoint.sources(id) > 0 - has_source - ввел константу для условий
+record.Черновик is None - is_new - переменная с флагом новой записи
