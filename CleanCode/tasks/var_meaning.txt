@@ -1,0 +1,17 @@
+1. candidates_collection: RecordSet = CreateRecordSet() - явное объявление переменной
+2. categories = FaceCategories(face)
+    for category in categories:  - объявление близко к циклу
+3. class SourceType(Enum) - ввод перечисления, для проверки на допустимые значения переменной
+4. node = None - завершение работы с переменной-узлом списка
+5. current_vacancy = vacancies[0] - явое объявление переменной счетчика цикла
+6. negotiation = None - начальная явная инициализация переменной
+7. filter = VacancyFilter(count=5, date=datetime.now(), department=get_parent_department(department)) - указание параметов конструктора
+8. class TriggerEvents(Enum) - ввод перечисления, для проверки на допустимые значения типов триггера
+9. negotiations: RecordSet = negotiations(face) - явное объявление переменной
+10.  current_negotiation = negotiations[0] - явое объявление переменной счетчика цикла
+11. candidates: RecordSet = CandidateRegistry - явное объявление переменной
+12. candidate_registry = CandidateREgistry(filtration, navigation) - явное объявление переменной c указанием полей класса
+13. formatted_values = self.formatted_values.copy() - объявление рядом с циклом
+    for key, value in formatted_values: 
+14.  candidate = None - завершенеи работы с переменной
+15. filtration: Record = Record(age=18, month='May', category = [1,2,3,4]) - явное объявление переменной
