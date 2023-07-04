@@ -1,0 +1,20 @@
+1. class Template:  - вынес переменные в приватные поля класса
+       __template: str
+       __rk_args: List[str]
+2.placeholders = re.match(pattern, msg_template)  - сгрупировал комманды, обращающиеся к конкретной переменной
+for placeholder in placeholders:
+  3. def _hook_rk_(self, hook_param): - разбил группы связанных методов в мтеод
+        self.__template(hook_params)
+        self.__rk_args(hook_params)
+        self.__localize(hook_params)
+  4. pattern = r"\{(\w+)\}" - локальная перенная только для функции
+  5. BL_OBJECT_NAME = 'Staff' константа в глобальном пространстве имен, без этого никак :)
+6.candidates = Cadidate.Registry() - сгруппировал связанные команды
+  enrich(candidates)
+  meta_data(cadidates)
+7. vacancies = VacancyEnquiry.List() - сгруппировал связанные команды
+  add_relations(vacancies)
+  add_info_for_ui(vacancies)
+  8. def enrich(candidates): - сгруппировал связанные команды
+  start_async_tasks(candidates)
+  sync_tasks(candidates)
