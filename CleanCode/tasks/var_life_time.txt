@@ -3,18 +3,45 @@
        __rk_args: List[str]
 2.placeholders = re.match(pattern, msg_template)  - сгрупировал комманды, обращающиеся к конкретной переменной
 for placeholder in placeholders:
-  3. def _hook_rk_(self, hook_param): - разбил группы связанных методов в мтеод
+3. def _hook_rk_(self, hook_param): - разбил группы связанных методов в метод
         self.__template(hook_params)
         self.__rk_args(hook_params)
         self.__localize(hook_params)
-  4. pattern = r"\{(\w+)\}" - локальная перенная только для функции
-  5. BL_OBJECT_NAME = 'Staff' константа в глобальном пространстве имен, без этого никак :)
+4. pattern = r"\{(\w+)\}" - локальная перенная только для функции
+5. BL_OBJECT_NAME = 'Staff' константа в глобальном пространстве имен, без этого никак :)
 6.candidates = Cadidate.Registry() - сгруппировал связанные команды
   enrich(candidates)
   meta_data(cadidates)
 7. vacancies = VacancyEnquiry.List() - сгруппировал связанные команды
   add_relations(vacancies)
   add_info_for_ui(vacancies)
-  8. def enrich(candidates): - сгруппировал связанные команды
-  start_async_tasks(candidates)
-  sync_tasks(candidates)
+8. def enrich(candidates): - сгруппировал связанные команды
+         start_async_tasks(candidates)
+         sync_tasks(candidates)
+9. def rk_template(template, kwargs):  - сгруппировал явное конструирование объекта в фабрике
+       return Template(template, kwargs)
+10. def message():  - сгруппировал несколько операци работы с переменной в методе, что позволило ограничить время жизни переменной до локального
+       msg_template = self.template()
+       ...
+       msg_template += ...
+       ...
+       msg_template += ...
+11. def resolve(processor, formatted_values): сгруппировал несколько операци работы с переменной в методе
+       if isinstace(resolve, ...):
+              # use process
+       if isinstace(resolve, ...):
+              # use process
+       if isinstace(resolve, ...):
+              # use process
+12. def _hook_conversion_(self, hook_param): - разбил группы связанных методов в метод
+        self.filter(hook_param)
+        self.selection(hook_param)
+13. add_fields.update(external_fields) - сгруппировал работу с переменной
+    convert_format(add_fields)
+    candidate.add_fields = add_fields
+14. tmp_format = '{} {} {}'   - сгруппировал работу с переменной
+    template.format = tmp_format
+    second_template.format = tmp_format + ' {:rk}'
+15. document = vacancy.doc    - сгруппировал работу с переменной 
+    update_document_status(add_fields)
+    set_status(document, external_vacancy)
