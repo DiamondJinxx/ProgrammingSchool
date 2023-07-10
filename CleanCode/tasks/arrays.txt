@@ -1,0 +1,5 @@
+1. for candidate in candidates: - перебор элементов без прямого обращения к индексам
+2. for vacancy in vacancies: - перебор элементов без прямого обращения к индексам
+3. for index, field in additional: - перебор элементов с безопасным использованием индекса
+4. timestamps: List[int] -> timestamps: Queue[int] - замена массива на очередь
+5. records: List[Record] -> records: Set[Record] - замена массива на множество
