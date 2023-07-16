@@ -1,0 +1,15 @@
+3.1.
+if record.Переход:  # проверим, что событие завершенное
+if record.Переход and not old_record:  # проверим, что событие завершенное и сейчас порисходит создание события
+if record.Переход and old_record and record.Переход != old_record.Переход:  # проверим, что при обновлении завершенного события изменили переход
+if record.Переход and old_record and record.Статус != old_record.Статус:  # проверим, что обновили статус события
+if record.Переход and old_record and record.Статус != old_record.Статус and record.Статус != Status.IN_PROGRES:  # завершили событие
+if record.Переход and record.Статус != Status.IN_PROGRES:  # проверим, что событие завершенное и оно не в процессе работы
+if record.Переход and record.ФазаСледствие is not None:  # проверим, что созданное событие закрылось с положительным исходом
+
+3.2
+if record.Переход: -> if self.is_planned():
+if record.Переход and not old_record: -> self.is_create_event():
+if record.Переход and old_record and record.Переход != old_record.Переход: -> if self.transition_changed()
+if record.Переход and old_record and record.Статус != old_record.Статус: -> if self.status_changed():
+if not record.Переход and record.Статус != Status.IN_PROGRES: -> if self.planned_event_status_changed()
