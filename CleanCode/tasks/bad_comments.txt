@@ -1,0 +1,100 @@
+1.  
+было:
+# проверим, что событие плановое
+if event.Переход is None: 
+стало, 12 пункт:
+if event.is_planned(): 
+
+2. 
+было:
+# проверим, что поменялся преход события
+if old_event and event.Переход != old_event.Переход: 
+стало, 12 пункт:
+if is_event_transition_changed(event, old_event): 
+3. 
+было:
+# проверим, что поменялся статус события
+if old_event and event.Статус != old_event.Статус: 
+стало, 12 пункт:
+if is_event_status_changed(event, old_event): 
+4. 
+было:
+if old_event: 
+стало, 7 пункт:
+if old_event: 
+
+5.было:
+# def create_candidate(record): 
+#     """DEPRECATED"""
+#     ....
+удалил метод в соответствии с 11 пунктом
+ 
+6.было:
+# def update_candidate(record): 
+#     """DEPRECATED"""
+#     ....
+удалил метод в соответствии с 11 пунктом
+7.было:
+# def create_entity_relation(record): 
+#     """DEPRECATED"""
+#     ....
+удалил метод в соответствии с 11 пунктом
+ 
+8. было:
+def UserCategoryCRUD(_BaseHandler): 
+     """Класс, реализующий CRUD операции над пользовательскими категориями.
+        Пользовательская категория - это ...
+     """
+     ....
+удалил избыточный комментарий, 7 пункт.
+def UserCategoryCRUD(_BaseHandler): 
+     """CRUD операции над пользовательскими категориями."""
+     ....
+9.было:
+def CandidateEventCRUD(_BaseHandler): 
+     """CRUD операции над событиями кандидата.
+        СОбытия бывают ... . 
+        Основые данные события: ...
+     """
+     ....
+удалил избыточный комментарий, 7 пункт.
+def CandidateEventCRUD(_BaseHandler): 
+     """CRUD операции над событиями кандидата."""
+     ....
+ 
+10. было:
+# проверим, что событие плановое
+if event.is_planned(): 
+удалил шум по 4 пункту:
+if event.is_planned(): 
+
+11.было:
+# Проверим, что статус события не изменился
+if event.Статус == old_event.Статус: 
+удалил шум по 4 пункту:
+if event.Статус == old_event.Статус: 
+ 
+12. 
+def update_category_external_relations(category, relations):
+    """Обновить связи пользовательских категорий с внешними"""
+    ...
+убрал комментарий, 10 пункт
+def update_category_external_relations(category, relations):
+    ...
+
+13.
+# обновим данные регламента  на сервисе
+Regulation.Update(regulation)
+убрал шум по 4 пункту
+Regulation.Update(regulation)
+14.
+# Проверим, что Фаза события остался без изменений
+if event.Фаза == old_event.Фаза: 
+удалил шум по 4 пункту:
+if event.Фаза == old_event.Фаза: 
+
+15.
+# Проверим, что переход события остался без изменений
+if event.Переход == old_event.Переход: 
+удалил шум по 4 пункту:
+if event.Переход == old_event.Переход: 
