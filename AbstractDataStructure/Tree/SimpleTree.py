@@ -11,10 +11,18 @@ class SimpleTree:
         self.Root = root # корень, может быть None
 	
     def AddChild(self, ParentNode, NewChild):
-        pass # ваш код добавления нового дочернего узла существующему ParentNode
+        # ваш код добавления нового дочернего узла существующему ParentNode
+        if ParentNode is None:
+            return
+        NewChild.Parent = ParentNode
+        ParentNode.Children.append(NewChild)
+
   
     def DeleteNode(self, NodeToDelete):
-        pass # ваш код удаления существующего узла NodeToDelete
+        if NodeToDelete not in self.Root.Children:
+            return
+        self.Root.Children.remove(NodeToDelete)
+        NodeToDelete.Parent = None
 
     def GetAllNodes(self):
         # ваш код выдачи всех узлов дерева в определённом порядке
