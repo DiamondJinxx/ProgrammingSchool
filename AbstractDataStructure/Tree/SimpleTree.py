@@ -19,6 +19,7 @@ class SimpleTree:
 
   
     def DeleteNode(self, NodeToDelete):
+        # remove Node from list and let GC make his work
         if NodeToDelete not in self.Root.Children:
             return
         self.Root.Children.remove(NodeToDelete)
@@ -39,8 +40,24 @@ class SimpleTree:
    
     def Count(self):
         # количество всех узлов в дереве
-        return 0
+        def dfs(root) -> int:
+            if not root:
+                return 0
+            count = 1
+            for child in root.Children:
+                count += dfs(child)
+            return count
+        return dfs(self.Root)
 
     def LeafCount(self):
         # количество листьев в дереве
-        return 0
+        def dfs(root) -> int:
+            if not root:
+                return 0
+            if not root.Children:
+                return 1
+            count = 0
+            for child in root.Children:
+                count += dfs(child)
+            return count
+        return dfs(self.Root)

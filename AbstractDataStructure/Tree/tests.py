@@ -27,4 +27,36 @@ class SimpleTreeTest(unittest.TestCase):
     def test_delete_from_empty_children(self):
         root = SimpleTreeNode(1, None)
         tree = SimpleTree(root)
+        tree.AddChild(root, SimpleTreeNode(2, root))
+        self.assertEqual(len(tree.Root.Children), 1)
         tree.DeleteNode(SimpleTreeNode(12, root))
+        self.assertEqual(len(tree.Root.Children), 1)
+
+
+    def test_count(self):
+        root = SimpleTreeNode(1, None)
+        tree = SimpleTree(root)
+        left_child = SimpleTreeNode(2, root)
+        right_child = SimpleTreeNode(3, root)
+        tree.AddChild(root, left_child)
+        tree.AddChild(root, right_child)
+        self.assertEqual(tree.Count(), 3)
+    
+    def test_count_if_root_is_none(self):
+        tree = SimpleTree(None)
+        self.assertEqual(tree.Count(), 0)
+
+    def test_leaf_count(self):
+        root = SimpleTreeNode(1, None)
+        tree = SimpleTree(root)
+        left_child = SimpleTreeNode(2, root)
+        right_child = SimpleTreeNode(3, root)
+        tree.AddChild(root, left_child)
+        tree.AddChild(root, right_child)
+        tree.AddChild(right_child, SimpleTreeNode(4, right_child))
+        tree.AddChild(right_child, SimpleTreeNode(5, right_child))
+        self.assertEqual(tree.LeafCount(), 3)
+
+    def test_leaf_count_if_root_is_none(self):
+        tree = SimpleTree(None)
+        self.assertEqual(tree.LeafCount(), 0)
