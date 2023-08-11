@@ -80,12 +80,13 @@ class SimpleTree:
         return dfs(self.Root)
 
     def nodes_lvl(self):
-        # we can use field in SimpleTreeNode to store node lvl
+        # we can use hash table in SimpleTree for store lvl: [nodes]
         def dfs(root, prev_lvl):
             if not root:
                 return 
             current_lvl = prev_lvl + 1
-            print(root, current_lvl)
+            result = [(root, current_lvl)]
             for child in root.Children:
-                dfs(child, current_lvl)
-        dfs(self.Root, 0)
+                result.extend(dfs(child, current_lvl))
+            return result
+        return dfs(self.Root, 0)
