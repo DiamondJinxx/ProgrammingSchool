@@ -16,7 +16,6 @@ class SimpleTree:
             return
         NewChild.Parent = ParentNode
         ParentNode.Children.append(NewChild)
-
   
     def DeleteNode(self, NodeToDelete):
         # remove Node from list and let GC make his work
@@ -27,16 +26,34 @@ class SimpleTree:
 
     def GetAllNodes(self):
         # ваш код выдачи всех узлов дерева в определённом порядке
-        return []
+        def dfs(root):
+            if not root:
+                return []
+            result = [root]
+            for child in root.Children:
+                result.extend(dfs(child))
+            return result
+        return dfs(self.Root)
 
     def FindNodesByValue(self, val):
         # ваш код поиска узлов по значению
-        return []
+        def dfs(root):
+            if not root:
+                return []
+            result = []
+            if root.NodeValue == val: result.append(root)
+            for child in root.Children:
+                result.extend(dfs(child))
+            return result
+        return dfs(self.Root)
    
     def MoveNode(self, OriginalNode, NewParent):
         # ваш код перемещения узла вместе с его поддеревом -- 
         # в качестве дочернего для узла NewParent
-        pass  
+        old_parent = OriginalNode.Parent
+        old_parent.Children.remove(OriginalNode)
+        OriginalNode.Parent = NewParent
+        NewParent.Children.append(OriginalNode)
    
     def Count(self):
         # количество всех узлов в дереве

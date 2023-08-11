@@ -60,3 +60,54 @@ class SimpleTreeTest(unittest.TestCase):
     def test_leaf_count_if_root_is_none(self):
         tree = SimpleTree(None)
         self.assertEqual(tree.LeafCount(), 0)
+
+    def test_get_all_nodes(self):
+        root = SimpleTreeNode(1, None)
+        tree = SimpleTree(root)
+        self.assertEqual(tree.GetAllNodes(), [root])
+        left_child = SimpleTreeNode(2, root)
+        right_child = SimpleTreeNode(3, root)
+        tree.AddChild(root, left_child)
+        tree.AddChild(root, right_child)
+        self.assertEqual(tree.GetAllNodes(), [root, left_child, right_child])
+        left_second_child = SimpleTreeNode(4, left_child)
+        right_second_child = SimpleTreeNode(4, left_child)
+        tree.AddChild(left_child, left_second_child)
+        tree.AddChild(left_child, right_second_child)
+        expected = [root, left_child, left_second_child, right_second_child, right_child]
+        nodes = tree.GetAllNodes()
+        for expected_child, child in zip(expected, nodes):
+            self.assertTrue(expected_child is child)
+    
+    def test_get_all_nodes_from_empty_tree(self):
+        tree = SimpleTree(None)
+        self.assertFalse(tree.GetAllNodes())
+
+    def test_find_nodes_by_value(self):
+        root = SimpleTreeNode(5, None)
+        tree = SimpleTree(root)
+        left_child = SimpleTreeNode(1, root)
+        right_child = SimpleTreeNode(5, root)
+        tree.AddChild(root, left_child)
+        tree.AddChild(root, right_child)
+        self.assertEqual(len(tree.FindNodesByValue(5)), 2)
+        expected = [root, right_child]
+        nodes_wiht_value = tree.FindNodesByValue(5)
+        for expected_node, node in zip(expected, nodes_wiht_value):
+            self.assertTrue(expected_node is node)
+
+    def test_move_node(self):
+        root = SimpleTreeNode(1, None)
+        tree = SimpleTree(root)
+        tree = SimpleTree(root)
+        left_child = SimpleTreeNode(2, root)
+        right_child = SimpleTreeNode(3, root)
+        tree.AddChild(root, left_child)
+        tree.AddChild(root, right_child)
+        tree.AddChild(left_child, SimpleTreeNode(4, left_child))
+        tree.AddChild(left_child, SimpleTreeNode(5, left_child))
+        tree.MoveNode(left_child, right_child)
+        self.assertEqual(len(root.Children), 1)
+        self.assertTrue(left_child.Parent is right_child)
+        self.assertTrue(left_child in right_child.Children)
+        self.assertEqual(len(right_child.Children), 1)
