@@ -78,3 +78,14 @@ class SimpleTree:
                 count += dfs(child)
             return count
         return dfs(self.Root)
+
+    def nodes_lvl(self):
+        # we can use field in SimpleTreeNode to store node lvl
+        def dfs(root, prev_lvl):
+            if not root:
+                return 
+            current_lvl = prev_lvl + 1
+            print(root, current_lvl)
+            for child in root.Children:
+                dfs(child, current_lvl)
+        dfs(self.Root, 0)
