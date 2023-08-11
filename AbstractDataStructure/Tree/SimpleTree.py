@@ -19,9 +19,8 @@ class SimpleTree:
   
     def DeleteNode(self, NodeToDelete):
         # remove Node from list and let GC make his work
-        if NodeToDelete not in self.Root.Children:
-            return
-        self.Root.Children.remove(NodeToDelete)
+        if NodeToDelete.Parent is not None and NodeToDelete in NodeToDelete.Parent.Children:
+            NodeToDelete.Parent.Children.remove(NodeToDelete)
         NodeToDelete.Parent = None
 
     def GetAllNodes(self):
@@ -90,3 +89,4 @@ class SimpleTree:
                 result.extend(dfs(child, current_lvl))
             return result
         return dfs(self.Root, 0)
+

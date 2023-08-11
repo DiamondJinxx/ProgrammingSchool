@@ -20,9 +20,14 @@ class SimpleTreeTest(unittest.TestCase):
         right_child = SimpleTreeNode(3, root)
         tree.AddChild(root, left_child)
         tree.AddChild(root, right_child)
-        tree.DeleteNode(left_child)
-        self.assertEqual(len(tree.Root.Children), 1)
-        self.assertIsNone(left_child.Parent)
+        new_child_one = SimpleTreeNode(4,  right_child)
+        new_child = SimpleTreeNode(5,  right_child)
+        tree.AddChild(right_child, new_child_one)
+        tree.AddChild(right_child, new_child)
+        old_count = tree.Count()
+        tree.DeleteNode(right_child)
+        self.assertEqual(tree.Count(), old_count - 3)
+        self.assertIsNone(right_child.Parent)
     
     def test_delete_from_empty_children(self):
         root = SimpleTreeNode(1, None)
