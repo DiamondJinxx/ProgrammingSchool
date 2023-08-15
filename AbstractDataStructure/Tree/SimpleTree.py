@@ -82,7 +82,7 @@ class SimpleTree:
         # we can use hash table in SimpleTree for store lvl: [nodes]
         def dfs(root, prev_lvl):
             if not root:
-                return 
+                return []
             current_lvl = prev_lvl + 1
             result = [(root, current_lvl)]
             for child in root.Children:
