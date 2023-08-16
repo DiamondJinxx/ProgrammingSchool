@@ -53,6 +53,25 @@ class BinarySearchTreeTests(unittest.TestCase):
         self.tree.AddKeyValue(45, 'Elena')
         self.assertFalse(self.tree.AddKeyValue(45, 'Elena'))
         
+    def test_find_min_max_from_root(self):
+        self.tree.AddKeyValue(22,'Olechka')
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(23, 'Zhora')
+        min_node = self.tree.FinMinMax(FromNode=None, FindMax=False)
+        self.assertTrue(min_node is self.tree.Root.LeftChild)
+        max_node = self.tree.FinMinMax(FromNode=None, FindMax=True)
+        self.assertTrue(max_node is self.tree.Root.RightChild)
+
+    def test_find_min_max_from_subtree(self):
+        self.tree.AddKeyValue(22,'Olechka')
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(23, 'Zhora')
+        self.tree.AddKeyValue(17, 'Misha')
+        self.tree.AddKeyValue(75, 'Victor')
+        min_node = self.tree.FinMinMax(self.tree.Root.LeftChild, FindMax=False)
+        self.assertTrue(min_node is self.tree.Root.LeftChild.LeftChild)
+        max_node = self.tree.FinMinMax(self.tree.Root.RightChild, FindMax=True)
+        self.assertTrue(max_node is self.tree.Root.RightChild.RightChild)
 
 
 if __name__ == '__main__':
