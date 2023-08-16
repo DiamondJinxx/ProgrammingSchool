@@ -7,26 +7,14 @@ class BSTNode:
         self.LeftChild = None # левый потомок
         self.RightChild = None # правый потомок
 
-    def has_one_child(self):
-        return self.LeftChild or self.RightChild
-
     def is_leaf(self):
         return self.LeftChild is None and self.RightChild is None
-
-    def is_left_child(self):
-        return self.Parent and self.Parent.LeftChild is self
-
-    def is_right_child(self):
-        return self.Parent and self.Parent.RightChild is self
 
     def set_new_child(self, new, old):
         if self.RightChild is old:
             self.RightChild = new
         if self.LeftChild is old:
             self.LeftChild = new
-
-    def __str__(self):
-        return str((self.NodeKey, self.NodeValue, str(self.Parent)))
 
 
 class BSTFind: # промежуточный результат поиска
@@ -43,7 +31,6 @@ class BST:
 
     def __init__(self, node):
         self.Root = node # корень дерева, или None
-        self.count = 1 if self.Root else 0
 
     def FindNodeByKey(self, key):
         # ищем в дереве узел и сопутствующую информацию по ключу
@@ -72,7 +59,6 @@ class BST:
         find_node = self.FindNodeByKey(key)
         if find_node.NodeHasKey:
             return False
-        self.count += 1
         if not self.Root:
             self.Root = BSTNode(key, val, None)
             return
@@ -103,41 +89,40 @@ class BST:
         if not find_node.NodeHasKey:
             return False
         node = find_node.Node
-        self.count -= 1
         # if node is root and no one nodes in tree
         if node is self.Root and node.is_leaf():
             self.Root = None
             return
-        
-        # node just a leaf
-        if node.is_leaf() and node.is_right_child():
+
+        if node.is_leaf() and node.Parent.RightChild is node:
             node.Parent.RightChild = None
             node.Parent = None
             return
-        if node.is_leaf() and node.is_left_child():
+        if node.is_leaf() and node.Parent.LeftChild is node:
             node.Parent.LeftChild = None
             node.Parent = None
             return
 
-        if node.LeftChild and not node.RightChild:
-            heir = node.LeftChild 
-        else:
-            heir = self.FinMinMax(node.RightChild, False)
-
-        # complexity node
-        if heir.is_left_child():
+        heir = self.FinMinMax(node.RightChild, False)
+        print(f'heir is node {heir.NodeKey}')
+        heir.RightChild = node.RightChild
+        heir.LeftChild = node.LeftChild
+        if heir.is_leaf():
+            print('heir is leaf')
             heir.Parent.LeftChild = None
-            heir.RightChild = node.RightChild
-        # unstead infinity recursion
-        if heir.is_left_child() and node.LeftChild and node.RightChild:
-            heir.LeftChild = node.LeftChild
-        if heir.is_right_child():
-            heir.LeftChild = node.LeftChild
+        else:
+
+        if node.Parent is None:
+            print('remove_from_root')
+            self.Root = heir
+        else:
+            print('remove from subtree')
+            node.Parent.set_new_child(new=heir, old=node)
         heir.Parent = node.Parent
-        if heir.Parent is None:
-            self.Root = heir 
-        else: 
-            heir.Parent.set_new_child(heir, node)  
+
+
+
+
 
     def Count(self):
-        return self.count # количество узлов в дереве
+        return 0 # количество узлов в дереве

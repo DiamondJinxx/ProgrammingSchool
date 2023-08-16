@@ -1,14 +1,13 @@
 from SearchTree import BST, BSTNode, BSTFind
 
-def print_tree(root: BSTNode):
-    if not root:
+
+def print_tree(node: BSTNode, level=0):
+    if node is None:
         return
-    parent = root.Parent.NodeKey if root.Parent else 'root'
-    print(f'{root.NodeKey}: {root.NodeValue}, parent: {parent}')
-    if root.LeftChild:
-        print_tree(root.LeftChild)
-    if root.RightChild:
-        print_tree(root.RightChild)
+    print_tree(node.RightChild, level + 1)
+    print(' ' * 4 * level + '+- ' + str((node.NodeKey, node.NodeValue)))
+    print_tree(node.LeftChild, level + 1)
+
 
 root = BSTNode(24, 'Dima', None)
 tree = BST(root)
@@ -17,10 +16,17 @@ tree.AddKeyValue(21, 'Dasha')
 tree.AddKeyValue(22,'Olechka')
 tree.AddKeyValue(45, 'Elena')
 tree.AddKeyValue(23, 'Zhora')
-min_node = tree.FinMinMax(None, False)
-print_tree(root)
-# print(min_node.NodeKey)
-# max_node = tree.FinMinMax(None, True)
-# print(max_node.NodeKey)
-# max_node_subtree = tree.FinMinMax(tree.Root.LeftChild, True)
-# print(max_node_subtree.NodeKey)
+tree.AddKeyValue(17, 'Misha')
+tree.AddKeyValue(75, 'Victor')
+print_tree(tree.Root)
+tree.DeleteNodeByKey(45)
+tree.DeleteNodeByKey(22)
+tree.DeleteNodeByKey(21)
+tree.DeleteNodeByKey(23)
+tree.DeleteNodeByKey(50)
+tree.DeleteNodeByKey(24)
+tree.DeleteNodeByKey(75)
+tree.DeleteNodeByKey(17)
+print(tree.DeleteNodeByKey(17))
+print('-' * 20)
+print_tree(tree.Root)

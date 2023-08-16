@@ -57,9 +57,9 @@ class BinarySearchTreeTests(unittest.TestCase):
         self.tree.AddKeyValue(22,'Olechka')
         self.tree.AddKeyValue(45, 'Elena')
         self.tree.AddKeyValue(23, 'Zhora')
-        min_node = self.tree.FinMinMax(FromNode=None, FindMax=False)
+        min_node = self.tree.FinMinMax(FromNode=self.tree.Root, FindMax=False)
         self.assertTrue(min_node is self.tree.Root.LeftChild)
-        max_node = self.tree.FinMinMax(FromNode=None, FindMax=True)
+        max_node = self.tree.FinMinMax(FromNode=self.tree.Root, FindMax=True)
         self.assertTrue(max_node is self.tree.Root.RightChild)
 
     def test_find_min_max_from_subtree(self):
@@ -72,6 +72,49 @@ class BinarySearchTreeTests(unittest.TestCase):
         self.assertTrue(min_node is self.tree.Root.LeftChild.LeftChild)
         max_node = self.tree.FinMinMax(self.tree.Root.RightChild, FindMax=True)
         self.assertTrue(max_node is self.tree.Root.RightChild.RightChild)
+
+    def test_delete_node_by_key_if_node_is_leaf(self):
+        self.tree.AddKeyValue(22,'Olechka')
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(23, 'Zhora')
+        self.tree.AddKeyValue(17, 'Misha')
+        self.tree.AddKeyValue(75, 'Victor')
+        self.tree.DeleteNodeByKey(75)
+        find_node = self.tree.FindNodeByKey(75)
+        self.assertFalse(find_node.NodeHasKey)
+    
+    def test_delete_node_by_key(self):
+        self.tree.AddKeyValue(22,'Olechka')
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(23, 'Zhora')
+        self.tree.AddKeyValue(17, 'Misha')
+        self.tree.AddKeyValue(75, 'Victor')
+        self.tree.DeleteNodeByKey(50)
+        self.assertFalse(self.tree.FindNodeByKey(50).NodeHasKey)
+        self.assertTrue(self.tree.FindNodeByKey(75).NodeHasKey)
+        self.assertTrue(self.tree.FindNodeByKey(45).NodeHasKey)
+
+    def test_delete_node_by_key_root(self):
+        self.tree.AddKeyValue(22,'Olechka')
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(23, 'Zhora')
+        self.tree.AddKeyValue(17, 'Misha')
+        self.tree.AddKeyValue(75, 'Victor')
+        self.tree.DeleteNodeByKey(24)
+        self.assertFalse(self.tree.FindNodeByKey(24).NodeHasKey)
+        expected_root = self.tree.FindNodeByKey(45).Node
+        self.assertTrue(expected_root is self.tree.Root) 
+
+    def test_delete_node_by_key_node_have_only_left_child(self):
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(17, 'Misha')
+        self.tree.AddKeyValue(75, 'Victor')
+        self.tree.DeleteNodeByKey(21)
+
+
+    def test_delete_from_empty_tree(self):
+        tree = BST(None)
+        self.assertFalse(tree.DeleteNodeByKey(12)) 
 
 
 if __name__ == '__main__':
