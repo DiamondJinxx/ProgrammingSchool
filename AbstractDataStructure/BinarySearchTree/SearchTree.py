@@ -63,8 +63,16 @@ class BST:
     def FinMinMax(self, FromNode, FindMax):
         # ищем максимальный/минимальный ключ в поддереве
         # возвращается объект типа BSTNode
-        return None
-	
+        if not self.Root:
+            return None
+        node = FromNode or self.Root
+        condition_child = node.RightChild if FindMax else node.LeftChild
+        while condition_child:
+            node = condition_child
+            condition_child = node.RightChild if FindMax else node.LeftChild
+        return node
+
+
     def DeleteNodeByKey(self, key):
         # удаляем узел по ключу
         return False # если узел не найден
