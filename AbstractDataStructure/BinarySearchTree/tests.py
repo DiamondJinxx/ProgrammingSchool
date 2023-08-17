@@ -8,10 +8,12 @@ class BinarySearchTreeTests(unittest.TestCase):
         self.tree = BST(self.root)
         self.tree.Root.LeftChild = BSTNode(21, 'Dasha', self.tree.Root)
         self.tree.Root.RightChild = BSTNode(50, 'Maksim', self.tree.Root)
+        self.tree.count = 3
 
 
     def test_create(self):
         self.assertTrue(self.tree.Root is self.root)
+        self.assertEqual(self.tree.count, 3)
     
 
     def test_find_node_by_key(self):
@@ -115,6 +117,17 @@ class BinarySearchTreeTests(unittest.TestCase):
     def test_delete_from_empty_tree(self):
         tree = BST(None)
         self.assertFalse(tree.DeleteNodeByKey(12)) 
+
+    def test_delete_node_by_key_last_node(self):
+        self.assertTrue(self.tree.FindNodeByKey(50).NodeHasKey)
+        self.assertTrue(self.tree.DeleteNodeByKey(50))
+        self.assertEqual(self.tree.Count(), 2)
+        self.assertTrue(self.tree.FindNodeByKey(24).NodeHasKey)
+        self.assertTrue(self.tree.DeleteNodeByKey(24))
+        self.assertEqual(self.tree.Count(), 1)
+        self.assertTrue(self.tree.FindNodeByKey(21).NodeHasKey)
+        self.assertTrue(self.tree.DeleteNodeByKey(21))
+        self.assertEqual(self.tree.Count(), 0)
 
 
 if __name__ == '__main__':

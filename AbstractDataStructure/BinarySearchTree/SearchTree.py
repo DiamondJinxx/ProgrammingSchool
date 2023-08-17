@@ -107,17 +107,17 @@ class BST:
         # if node is root and no one nodes in tree
         if node is self.Root and node.is_leaf():
             self.Root = None
-            return
+            return True
         
         # node just a leaf
         if node.is_leaf() and node.is_right_child():
             node.Parent.RightChild = None
             node.Parent = None
-            return
+            return True
         if node.is_leaf() and node.is_left_child():
             node.Parent.LeftChild = None
             node.Parent = None
-            return
+            return True
 
         if node.LeftChild and not node.RightChild:
             heir = node.LeftChild 
@@ -138,6 +138,7 @@ class BST:
             self.Root = heir 
         else: 
             heir.Parent.set_new_child(heir, node)  
+        return True
 
     def Count(self):
         return self.count # количество узлов в дереве
