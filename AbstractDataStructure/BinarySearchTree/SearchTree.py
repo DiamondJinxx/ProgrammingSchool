@@ -75,13 +75,14 @@ class BST:
         self.count += 1
         if not self.Root:
             self.Root = BSTNode(key, val, None)
-            return
+            return True
         parent_node = find_node.Node
         new_node = BSTNode(key, val, parent_node) 
         if find_node.ToLeft:
             parent_node.LeftChild = new_node
         else:
             parent_node.RightChild = new_node
+        return True
   
     def FinMinMax(self, FromNode, FindMax):
         # ищем максимальный/минимальный ключ в поддереве
