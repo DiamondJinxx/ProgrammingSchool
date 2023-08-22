@@ -129,6 +129,20 @@ class BinarySearchTreeTests(unittest.TestCase):
         self.assertTrue(self.tree.DeleteNodeByKey(21))
         self.assertEqual(self.tree.Count(), 0)
 
+    def test_wide_all_nodes_empty_tree(self):
+        tree = BST(None)
+        self.assertFalse(bool(tree.WideAllNodes()))
+
+    def test_wide_all_nodes(self):
+        #TODO: HOW I can put it in setUp func?
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(17, 'Misha')
+        self.tree.AddKeyValue(75, 'Victor')
+        extepted_nodes_order = (24, 21, 50, 17, 45, 75)
+        nodes = tuple(map(lambda node: node.NodeKey, self.tree.WideAllNodes()))
+        self.assertEqual(extepted_nodes_order, nodes)
+
+
 
 if __name__ == '__main__':
     unittest.main()

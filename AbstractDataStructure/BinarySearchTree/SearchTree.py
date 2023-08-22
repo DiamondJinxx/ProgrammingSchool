@@ -1,3 +1,5 @@
+from collections import deque
+
 class BSTNode:
 	
     def __init__(self, key, val, parent):
@@ -143,3 +145,19 @@ class BST:
 
     def Count(self):
         return self.count # количество узлов в дереве
+    
+    def WideAllNodes(self):
+        result = []
+        #NOTE: does this solutions work faster then sample below?
+        # if not self.Root:
+        #    return ()
+        q = deque([self.Root]) if self.Root else deque()
+        while q:
+            node = q.popleft()
+            result.append(node)
+            if node.LeftChild:
+                q.append(node.LeftChild)
+            if node.RightChild:
+                q.append(node.RightChild)
+
+        return tuple(result)
