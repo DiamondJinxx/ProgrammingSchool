@@ -164,6 +164,9 @@ class BinarySearchTreeTests(unittest.TestCase):
         nodes = tuple(map(lambda node: node.NodeKey, self.tree.DeepAllNodes(2)))
         self.assertEqual(pre_order_extepted_nodes_order, nodes)
 
+        # test if order not in (0, 1, 2) range
+        self.assertFalse(bool(self.tree.DeepAllNodes(4)))
+
 
 if __name__ == '__main__':
     unittest.main()

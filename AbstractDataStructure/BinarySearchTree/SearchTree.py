@@ -171,23 +171,17 @@ class BST:
             2 - pre-order
         """
         def dfs(root: BSTNode, order: int) -> List[BSTNode]:
-            if not root:
+            if not root or order not in range(3):
                 return []
             nodes = []
-            if order == 0:
-                nodes.extend(dfs(root.LeftChild, order))
-                nodes.append(root)
-                nodes.extend(dfs(root.RightChild, order))
-            if order == 1:
-                nodes.extend(dfs(root.LeftChild, order))
-                nodes.extend(dfs(root.RightChild, order))
-                nodes.append(root)
             if order == 2:
                 nodes.append(root)
-                nodes.extend(dfs(root.LeftChild, order))
-                nodes.extend(dfs(root.RightChild, order))
+            nodes.extend(dfs(root.LeftChild, order))
+            if order == 0:
+                nodes.append(root)
+            nodes.extend(dfs(root.RightChild, order))
+            if order == 1:
+                nodes.append(root)
             return nodes
         return dfs(self.Root, order)
-
-
 
