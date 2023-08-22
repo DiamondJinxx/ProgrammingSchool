@@ -1,5 +1,5 @@
 from collections import deque
-from typing import List
+from typing import List, Tuple
 
 class BSTNode:
 	
@@ -147,7 +147,7 @@ class BST:
     def Count(self):
         return self.count # количество узлов в дереве
     
-    def WideAllNodes(self):
+    def WideAllNodes(self) -> Tuple[BSTNode]:
         result = []
         #NOTE: does this solutions work faster then sample below?
         # if not self.Root:
@@ -163,7 +163,7 @@ class BST:
 
         return tuple(result)
 
-    def DeepAllNodes(self, order: int):
+    def DeepAllNodes(self, order: int) -> Tuple[BSTNode]:
         """
         order:
             0 - in-order
@@ -183,5 +183,5 @@ class BST:
             if order == 1:
                 nodes.append(root)
             return nodes
-        return dfs(self.Root, order)
+        return tuple(dfs(self.Root, order))
 
