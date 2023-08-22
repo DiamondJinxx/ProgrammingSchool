@@ -1,4 +1,5 @@
 from collections import deque
+from typing import List
 
 class BSTNode:
 	
@@ -161,3 +162,32 @@ class BST:
                 q.append(node.RightChild)
 
         return tuple(result)
+
+    def DeepAllNodes(self, order: int):
+        """
+        order:
+            0 - in-order
+            1 - post-order
+            2 - pre-order
+        """
+        def dfs(root: BSTNode, order: int) -> List[BSTNode]:
+            if not root:
+                return []
+            nodes = []
+            if order == 0:
+                nodes.extend(dfs(root.LeftChild, order))
+                nodes.append(root)
+                nodes.extend(dfs(root.RightChild, order))
+            if order == 1:
+                nodes.extend(dfs(root.LeftChild, order))
+                nodes.extend(dfs(root.RightChild, order))
+                nodes.append(root)
+            if order == 2:
+                nodes.append(root)
+                nodes.extend(dfs(root.LeftChild, order))
+                nodes.extend(dfs(root.RightChild, order))
+            return nodes
+        return dfs(self.Root, order)
+
+
+

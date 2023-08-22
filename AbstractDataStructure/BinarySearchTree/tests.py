@@ -142,6 +142,27 @@ class BinarySearchTreeTests(unittest.TestCase):
         nodes = tuple(map(lambda node: node.NodeKey, self.tree.WideAllNodes()))
         self.assertEqual(extepted_nodes_order, nodes)
 
+    def test_deep_all_nodes_empty_tree(self):
+        tree = BST(None)
+        self.assertFalse(bool(tree.DeepAllNodes(0)))
+        self.assertFalse(bool(tree.DeepAllNodes(1)))
+        self.assertFalse(bool(tree.DeepAllNodes(2)))
+
+    def test_deep_all_nodes(self):
+        self.tree.AddKeyValue(45, 'Elena')
+        self.tree.AddKeyValue(17, 'Misha')
+        self.tree.AddKeyValue(75, 'Victor')
+        in_order_extepted_nodes_order = (17, 21, 24, 45, 50, 75)
+        nodes = tuple(map(lambda node: node.NodeKey, self.tree.DeepAllNodes(0)))
+        self.assertEqual(in_order_extepted_nodes_order, nodes)
+
+        post_order_extepted_nodes_order = (17, 21, 45, 75, 50, 24)
+        nodes = tuple(map(lambda node: node.NodeKey, self.tree.DeepAllNodes(1)))
+        self.assertEqual(post_order_extepted_nodes_order, nodes)
+
+        pre_order_extepted_nodes_order = (24, 21, 17, 50, 45, 75)
+        nodes = tuple(map(lambda node: node.NodeKey, self.tree.DeepAllNodes(2)))
+        self.assertEqual(pre_order_extepted_nodes_order, nodes)
 
 
 if __name__ == '__main__':
