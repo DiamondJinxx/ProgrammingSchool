@@ -26,11 +26,12 @@ class aBST:
     def AddKey(self, key):
         # добавляем ключ в массив
         index_for_new_node = self.FindKeyIndex(key)
-        if index_for_new_node is None or index_for_new_node > 0:
+        if index_for_new_node is None:
             return -1
         # special case with root, becose -0 equal to 0 :)
-        if index_for_new_node == 0 and not self.is_empty():
-            return -1
+        is_node_exist = (index_for_new_node == 0 and not self.is_empty()) or index_for_new_node > 0
+        if is_node_exist:
+            return index_for_new_node
         self.Tree[-index_for_new_node] = key
         return -index_for_new_node
 

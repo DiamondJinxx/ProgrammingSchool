@@ -62,7 +62,7 @@ class ArrayBinaryTreeTest(unittest.TestCase):
 
     def test_add_key_if_key_exist(self):
         new_node_index = self.bst.AddKey(17) 
-        self.assertEqual(new_node_index, -1)
+        self.assertEqual(new_node_index, 3)
 
     def test_add_key_to_root_of_empty_tree(self):
         bst = aBST(0)
@@ -75,7 +75,7 @@ class ArrayBinaryTreeTest(unittest.TestCase):
         bst = aBST(0)
         bst.Tree[0] = 12
         new_node_index = bst.AddKey(12)
-        self.assertEqual(new_node_index, -1)
+        self.assertEqual(new_node_index, 0)
 
 
 if __name__ == '__main__':
