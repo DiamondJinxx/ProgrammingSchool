@@ -24,6 +24,7 @@ class BalancedBST:
             return None
         middle = len(array) // 2
         node = BSTNode(array[middle], parent)
+        node.Level = parent.Level + 1 if parent else 0
         node.LeftChild = self.feel(node, array[:middle])
         node.RightChild = self.feel(node, array[middle + 1:])
         return node
