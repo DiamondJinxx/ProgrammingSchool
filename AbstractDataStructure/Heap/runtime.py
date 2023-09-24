@@ -1,6 +1,11 @@
 from Heap import Heap
 
 heap = Heap()
-source_array = [i for i in range(1, 10)]
-heap.MakeHeap(source_array, 3)
+heap.MakeHeap([6, 5, 4, 3, 2, 1, 0], 2)
+print(heap.HeapArray)
+print(heap.GetMax())
+print(heap.HeapArray)
+while heap.GetMax() != -1:
+    pass
+
 print(heap.HeapArray)

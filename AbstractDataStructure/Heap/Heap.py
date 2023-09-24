@@ -15,24 +15,16 @@ class Heap:
         # вернуть значение корня и перестроить кучу
         if self._is_empty():
             return -1
-        self.count -= 1
         maximum = self.HeapArray[0]
-        root = -1
-        for idx in range(len(self.HeapArray) - 1, -1, -1):
-            if self.HeapArray[idx] is not None:
-                root = idx
-                break
-        if root == 0:
-            self.HeapArray[root] = None
-            return maximum
-        self.HeapArray[0] = self.HeapArray[root]
-        self.HeapArray[root] = None
+
+        self.HeapArray[0] = self.HeapArray[self.count - 1]
+        self.HeapArray[self.count - 1] = None
+
+        self.count -= 1
         root = 0
         max_child = self.__max_child(root)
-        while max_child != -1 and self.HeapArray[root] < self.HeapArray[
-                max_child]:
-            self.HeapArray[root], self.HeapArray[max_child] = self.HeapArray[
-                max_child], self.HeapArray[root]
+        while max_child != -1 and self.HeapArray[root] < self.HeapArray[max_child]:
+            self.HeapArray[root], self.HeapArray[max_child] = self.HeapArray[max_child], self.HeapArray[root]
             root = max_child
             max_child = self.__max_child(root)
         return maximum
@@ -41,6 +33,9 @@ class Heap:
         """Get max child. If both child is None - return -1."""
         left = parent * 2 + 1
         right = parent * 2 + 2
+
+        if left > len(self.HeapArray) or right > len(self.HeapArray):
+            return -1
         if self.HeapArray[left] is None and self.HeapArray[right] is None:
             return -1
         if self.HeapArray[left] is None and self.HeapArray[right] is not None:
@@ -53,7 +48,7 @@ class Heap:
 
     def Add(self, key):
         # добавляем новый элемент key в кучу и перестраиваем её
-        if not self.HeapArray or None not in self.HeapArray:
+        if self._is_full():
             return False
         new_node = self.HeapArray.index(None)
         self.HeapArray[new_node] = key
@@ -80,3 +75,6 @@ class Heap:
 
     def _is_empty(self):
         return self.count == 0
+
+    def _is_full(self):
+        return self.count == len(self.HeapArray)
