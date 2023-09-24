@@ -2,6 +2,7 @@ class Heap:
 
     def __init__(self):
         self.HeapArray = []  # хранит неотрицательные числа-ключи
+        self.count = 0
 
     def MakeHeap(self, a, depth):
         # создаём массив кучи HeapArray из заданного
@@ -14,6 +15,7 @@ class Heap:
         # вернуть значение корня и перестроить кучу
         if self._is_empty():
             return -1
+        self.count -= 1
         maximum = self.HeapArray[0]
         root = -1
         for idx in range(len(self.HeapArray) - 1, -1, -1):
@@ -66,6 +68,7 @@ class Heap:
             diff = 1 if self.__is_left_child(new_node) else 2
             parent = (new_node - diff) // 2
 
+        self.count += 1
         return True
 
     def __iter__(self):
@@ -76,4 +79,4 @@ class Heap:
         return child % 2 == 1
 
     def _is_empty(self):
-        return not self.HeapArray or not any(self.HeapArray)
+        return self.count == 0
