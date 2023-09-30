@@ -47,30 +47,24 @@ class SimpleGraph:
 	
     def IsEdge(self, v1, v2):
         # True если есть ребро между вершинами v1 и v2
-        v1_idx = self.__vertex_idx(v1)
-        v2_idx = self.__vertex_idx(v2)
-        if v1_idx == -1 or v2_idx == -1:
+        if self.count < 1:
             return False
-        return self.m_adjacency[v1_idx][v2_idx] == 1 and self.m_adjacency[v2_idx][v1_idx] == 1
+        return self.m_adjacency[v1][v2] == 1 and self.m_adjacency[v2][v1] == 1
 
 	
     def AddEdge(self, v1, v2):
         # добавление ребра между вершинами v1 и v2
-        v1_idx = self.__vertex_idx(v1)
-        v2_idx = self.__vertex_idx(v2)
-        if v1_idx == -1 or v2_idx == -1:
+        if self.count < 1:
             return
-        self.m_adjacency[v1_idx][v2_idx] = 1
-        self.m_adjacency[v2_idx][v1_idx] = 1
+        self.m_adjacency[v1][v2] = 1
+        self.m_adjacency[v2][v1] = 1
 	
     def RemoveEdge(self, v1, v2):
         # удаление ребра между вершинами v1 и v2
-        v1_idx = self.__vertex_idx(v1)
-        v2_idx = self.__vertex_idx(v2)
-        if v1_idx == -1 or v2_idx == -1:
+        if self.count < 1:
             return
-        self.m_adjacency[v1_idx][v2_idx] = 0
-        self.m_adjacency[v2_idx][v1_idx] = 0
+        self.m_adjacency[v1][v2] = 0
+        self.m_adjacency[v2][v1] = 0
 
     
     def __contains__(self, v) -> bool:
