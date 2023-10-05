@@ -1,4 +1,5 @@
 from SimpleTree import SimpleTree, SimpleTreeNode
+from pprint import pprint
 
 
 
@@ -12,5 +13,8 @@ left_second_child = SimpleTreeNode(4, left_child)
 right_second_child = SimpleTreeNode(4, left_child)
 tree.AddChild(left_child, left_second_child)
 tree.AddChild(left_child, right_second_child)
+right_right_child = SimpleTreeNode(6, right_child)
+tree.AddChild(right_child, right_right_child)
 
-tree.nodes_lvl()
+# pprint(tree.nodes_lvl())
+print(tree.EvenTrees())

@@ -90,3 +90,22 @@ class SimpleTree:
             return result
         return dfs(self.Root, 0)
 
+    def EvenTrees(self):
+        if not self.Root:
+            return []
+        res = []
+        stack = []
+        node = self.Root
+        for i in range(len(node.Children)):
+            vizit = []
+            vizit.append(node)
+            stack.insert(0, node.Children[i])
+            while stack:
+                stack.extend(stack[0].Children)
+                vizit.insert(0, stack[0])
+                stack.pop(0)
+            if len(vizit) % 2 == 1:
+                res.append(node)
+                res.append(node.Children[i])
+
+        return res
