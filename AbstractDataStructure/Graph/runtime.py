@@ -1,4 +1,5 @@
 from Graph import SimpleGraph, Vertex
+from pprint import pprint
 
 def print_graph(graph: SimpleGraph):
     print('-' * 30)
@@ -33,10 +34,11 @@ g.m_adjacency[4][2] = 1
 g.vertex[3] = Vertex('D')
 g.vertex[4] = Vertex('E')
 g.count = 5
-print_graph(g)
+# print_graph(g)
 g.AddVertex('F')
-print('-'* 20)
+# print('-'* 20)
 print_graph(g)
-g.RemoveVertex(0)
-print('-'* 20)
-print_graph(g)
+# g.RemoveVertex(0)
+# print('-'* 20)
+# print_graph(g)
+pprint(g.DepthFirstSearch(4, 0))

@@ -2,6 +2,7 @@ class Vertex:
 
     def __init__(self, val):
         self.Value = val
+        self.Hit = False
 
     def __str__(self) -> str:
         return f'{self.Value}'
@@ -80,3 +81,42 @@ class SimpleGraph:
                 idx = i
                 break
         return idx
+    
+    def clear_hits(self):
+        for vertex in self.vertex:
+            vertex.Hit = False
+
+    def adjacent_to(self, vertex: int):
+        return [(i, v) for i, v in enumerate(self.vertex) if self.m_adjacency[vertex][i] == 1]
+    
+    def first_adjacent_not_meet(self, vtx):
+        adj = self.adjacent_to(vtx)
+        for idx, v in adj:
+            if not v.Hit:
+                return idx
+        return None
+
+
+    def set_hit(self, vtx: int, hit = False):
+        self.vertex[vtx].Hit = hit
+
+    def DepthFirstSearch(self, VFrom, VTo):
+        # узлы задаются позициями в списке vertex
+        # возвращается список узлов -- путь из VFrom в VTo
+        # или [] если пути нету
+        self.clear_hits()
+        stack = [VFrom]
+        self.set_hit(VFrom, True)
+        while stack:
+            vtx = stack[-1]
+            first_adj = self.first_adjacent_not_meet(vtx)
+            if first_adj is None:
+                stack.pop()
+                continue
+            self.set_hit(first_adj, True)
+            stack.append(first_adj)
+            if first_adj == VTo:
+                return stack
+
+        return stack
+            
