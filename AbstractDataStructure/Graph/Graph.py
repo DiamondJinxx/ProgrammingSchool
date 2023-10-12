@@ -117,11 +117,6 @@ class SimpleGraph:
             stack.append(first_adj)
             if first_adj == VTo:
                 break
-        if stack:
-            res = []
-            for vi in stack:
-                res.append(self.vertex[vi])
-            stack = res
-
+        stack[:] = [self.vertex[vi] for vi in stack]
         return stack
             
