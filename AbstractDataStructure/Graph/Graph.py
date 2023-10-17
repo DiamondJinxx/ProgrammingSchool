@@ -119,4 +119,36 @@ class SimpleGraph:
                 break
         stack[:] = [self.vertex[vi] for vi in stack]
         return stack
-            
+
+    def BreadthFirstSearch(self, VFrom, VTo):
+        # узлы задаются позициями в списке vertex
+        # возвращается список узлов -- путь из VFrom в VTo
+        # или [] если пути нету           
+        self.clear_hits()
+        queue = [VFrom]
+        self.set_hit(VFrom, True)
+        path = [0] * self.max_vertex
+        find = False
+        while queue:
+            vtx = queue[0]
+            first_adj = self.first_adjacent_not_meet(vtx)
+            if first_adj is None:
+                queue.pop(0)
+                continue
+            self.set_hit(first_adj, True)
+            queue.append(first_adj)
+            path[first_adj] = vtx
+            if first_adj == VTo:
+                find = True
+                break
+        if not find:
+            return []
+        result = []
+        while VTo != VFrom:
+            result.append(self.vertex[VTo])
+            VTo = path[VTo]
+        result.append(self.vertex[VTo])
+        result.reverse()
+        return result
+
+
