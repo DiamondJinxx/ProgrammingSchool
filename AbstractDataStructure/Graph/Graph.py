@@ -151,4 +151,25 @@ class SimpleGraph:
         result.reverse()
         return result
 
+    def WeakVertices(self):
+        # возвращает список узлов вне треугольников
+        return [vertex for idx, vertex in enumerate(self.vertex) if self.is_weak(idx)]
 
+    def is_weak(self, vertex_idx: int) -> bool:
+        """check if vertex is weak"""
+        if self.vertex[vertex_idx] is None:
+            return False
+        adjacent_vertexes = list(map(lambda pair: pair[0], self.adjacent_to(vertex_idx)))
+        if len(adjacent_vertexes) < 2:
+            return True
+        return not self.has_one_relation_between(adjacent_vertexes)
+        
+    def has_one_relation_between(self, queue: list) -> bool:
+        """check realtion between vertex in queue"""
+        while len(queue) > 1:
+            current = queue.pop(0)
+            arr = queue.copy()
+            for vertex in arr:
+                if self.IsEdge(current, vertex):
+                    return True
+        return False

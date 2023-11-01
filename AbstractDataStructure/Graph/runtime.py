@@ -32,15 +32,18 @@ g.vertex[2] = Vertex('C')
 g.m_adjacency[2][4] = 1
 g.m_adjacency[4][2] = 1
 g.vertex[3] = Vertex('D')
+g.m_adjacency[2][3] = 1
+g.m_adjacency[3][2] = 1
 g.vertex[4] = Vertex('E')
 g.count = 5
 # print_graph(g)
-g.AddVertex('F')
+# g.AddVertex('F')
 # print('-'* 20)
 print_graph(g)
 # g.RemoveVertex(0)
 # print('-'* 20)
 # print_graph(g)
-r = g.BreadthFirstSearch(0, 4)
-r = list(map(lambda v: v.Value, r))
-pprint(r)
+# r = g.BreadthFirstSearch(0, 4)
+# r = list(map(lambda v: v.Value, r))
+# pprint(r)
+print(len(g.WeakVertices()))
