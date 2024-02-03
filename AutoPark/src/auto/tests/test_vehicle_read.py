@@ -30,7 +30,7 @@ def vehicle(mixer, brand):
     )
 
 
-def test_vehicle_read(
+def test_vehicle_list(
     api,
     vehicle_type,
     brand,
@@ -43,3 +43,19 @@ def test_vehicle_read(
     assert result[0]['brand']['name'] == brand.name
     assert result[0]['brand']['vehicle_type']['id'] == vehicle_type.id
     assert result[0]['brand']['vehicle_type']['description'] == vehicle_type.description
+
+
+def test_vehicle_retrieve(
+    api,
+    vehicle_type,
+    brand,
+    vehicle
+) -> None:
+    result = api.get(f'/api/v1/auto{vehicle.id}/')
+
+    assert result['id'] == vehicle.id
+    assert result['brand']['id'] == brand.id
+    assert result['brand']['name'] == brand.name
+    assert result['brand']['vehicle_type']['id'] == vehicle_type.id
+    assert result['brand']['vehicle_type']['description'] == vehicle_type.description
+
