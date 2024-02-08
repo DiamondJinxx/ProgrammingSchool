@@ -1,11 +1,13 @@
 from rest_framework.routers import SimpleRouter
 from django.urls import path, include
-from auto.api.views import VehicleViewSet
+from auto.api.views import VehicleViewSet, DriversViewSet, EnterpriseViewSet
 
 
 router = SimpleRouter()
-router.register('', VehicleViewSet)
+router.register('/vehicles', VehicleViewSet)
+router.register('/enterprise', EnterpriseViewSet)
+router.register('/drivers', DriversViewSet)
 
 urlpatterns = [
-    path('/vehicles', include(router.urls)),
+    path('', include(router.urls)),
 ]

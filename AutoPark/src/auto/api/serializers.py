@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from auto.models import Brand, Vehicle, VehicleType
+from auto.models import Brand, Vehicle, VehicleType, Enterprise, Driver
 
 
 class VehicleTypeSerializer(serializers.ModelSerializer):
@@ -28,6 +28,8 @@ class BrandSerializer(serializers.ModelSerializer):
 
 class VehicleSerializer(serializers.ModelSerializer):
     brand_id = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())
+    enterprise_id = serializers.PrimaryKeyRelatedField(queryset=Enterprise.objects.all())
+
     class Meta:
         model = Vehicle
         fields = [
@@ -35,6 +37,36 @@ class VehicleSerializer(serializers.ModelSerializer):
             'price',
             'mileage',
             'release_year',
-            'brand_id'
+            'brand_id',
+            'enterprise_id',
+            'active_driver',
+            'drivers'
         ]
+
+
+class EnterpriseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enterprise
+        fields = [
+            'name',
+            'city',
+            'foundation_date',
+            'vehicles',
+            'drivers'
+        ]
+
+
+class DriverSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Driver
+        fields = [
+            'first_name',
+            'second_name',
+            'patronymic',
+            'salary',
+            'enterprise'
+        ]
+
 
