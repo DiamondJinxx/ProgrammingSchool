@@ -16,16 +16,21 @@ class Vehicle(models.Model):
         'Driver',
         related_name='vehicles'
     )
-    active_driver = models.ForeignKey(
+    active_driver = models.OneToOneField(
         'Driver',
         on_delete=models.SET_NULL,
         null=True,
-        related_name='current_vehicle'
+        blank=True,
+        related_name='active_vehicle'
     )
 
     class Meta:
         verbose_name = "Транспортное средство"
         verbose_name_plural = "Транспортные средства"
+
+
+    def __str__(self):
+        return f"{self.id}: {str(self.brand)} - {self.release_year}"
 
 
 class VehicleType(models.Model):
