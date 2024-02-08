@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 
 class Vehicle(models.Model):
     price = models.IntegerField()
@@ -38,3 +37,32 @@ class Brand(models.Model):
 
     def __str__(self):
         return f"{self.name}: {self.vehicle_type.description}"
+
+
+class Enterprise(models.Model):
+    """Модель предприятия"""
+    name = models.CharField(max_length=240)
+    city = models.CharField(max_length=3)
+    foundation_date = models.DateField()
+
+    class Meta:
+        verbose_name = "Предприятие"
+        verbose_name_plural = "Предприятия"
+
+    def __str__(self):
+        return f"{self.name}({self.foundation_date})"
+
+
+class Driver(models.Model):
+    """Водитель"""
+    first_name = models.CharField(max_length=30)
+    second_name = models.CharField(max_length=30)
+    patronymic = models.CharField(max_length=40, blank=False)
+    salary = models.IntegerField()
+
+    class Meta:
+        verbose_name = "Водитель"
+        verbose_name_plural = "Водители"
+
+    def __str__(self):
+        return f"{self.first_name} {self.second_name} {self.patronymic}"
