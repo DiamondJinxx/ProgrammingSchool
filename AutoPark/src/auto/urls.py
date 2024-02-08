@@ -7,5 +7,5 @@ router = SimpleRouter()
 router.register('', VehicleViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('/vehicles', include(router.urls)),
 ]

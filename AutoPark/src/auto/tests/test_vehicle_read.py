@@ -39,10 +39,7 @@ def test_vehicle_list(
     result = api.get('/api/v1/auto')
 
     assert result[0]['id'] == vehicle.id
-    assert result[0]['brand']['id'] == brand.id
-    assert result[0]['brand']['name'] == brand.name
-    assert result[0]['brand']['vehicle_type']['id'] == vehicle_type.id
-    assert result[0]['brand']['vehicle_type']['description'] == vehicle_type.description
+    assert result[0]['brand_id'] == brand.id
 
 
 def test_vehicle_retrieve(
@@ -53,9 +50,5 @@ def test_vehicle_retrieve(
 ) -> None:
     result = api.get(f'/api/v1/auto{vehicle.id}/')
 
-    assert result['id'] == vehicle.id
-    assert result['brand']['id'] == brand.id
-    assert result['brand']['name'] == brand.name
-    assert result['brand']['vehicle_type']['id'] == vehicle_type.id
-    assert result['brand']['vehicle_type']['description'] == vehicle_type.description
-
+    assert result[0]['id'] == vehicle.id
+    assert result[0]['brand_id'] == brand.id

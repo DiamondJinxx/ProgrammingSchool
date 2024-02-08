@@ -12,7 +12,7 @@ class VehicleTypeSerializer(serializers.ModelSerializer):
 
 
 class BrandSerializer(serializers.ModelSerializer):
-    vehicle_type = VehicleTypeSerializer()
+    vehicle_type_id = serializers.PrimaryKeyRelatedField(queryset=VehicleType.objects.all())
     class Meta:
         model = Brand
         fields = [
@@ -22,12 +22,12 @@ class BrandSerializer(serializers.ModelSerializer):
             'number_of_seats',
             'fuel_capacity',
             'max_speed',
-            'vehicle_type'
+            'vehicle_type_id'
         ]
 
 
 class VehicleSerializer(serializers.ModelSerializer):
-    brand = BrandSerializer()
+    brand_id = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())
     class Meta:
         model = Vehicle
         fields = [
@@ -35,6 +35,6 @@ class VehicleSerializer(serializers.ModelSerializer):
             'price',
             'mileage',
             'release_year',
-            'brand'
+            'brand_id'
         ]
 
