@@ -10,7 +10,14 @@ from auto.models import (
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
-    list_display = ['id', 'price', 'mileage', 'release_year', 'brand']
+    list_display = [
+        'id',
+        'price',
+        'mileage',
+        'release_year',
+        'brand',
+        'enterprise',
+    ]
 
 
 @admin.register(VehicleType)
@@ -20,15 +27,33 @@ class VehicleTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'load_capacity', 'number_of_seats', 'fuel_capacity', 'max_speed', 'vehicle_type']
+    list_display = [
+        'id',
+        'name',
+        'load_capacity',
+        'number_of_seats',
+        'fuel_capacity',
+        'max_speed',
+        'vehicle_type'
+    ]
 
 
 @admin.register(Enterprise)
 class EnterpriseAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'city', 'foundation_date']
+    list_display = [
+        'id',
+        'name',
+        'city',
+        'foundation_date', 
+    ]
 
 
 @admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'second_name', 'patronymic', 'salary']
-
+    list_display = [
+        'id',
+        'first_name',
+        'second_name',
+        'patronymic', 
+        'salary', 
+    ]

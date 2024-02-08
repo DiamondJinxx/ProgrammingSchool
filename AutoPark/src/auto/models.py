@@ -6,6 +6,22 @@ class Vehicle(models.Model):
     mileage = models.IntegerField()
     release_year = models.IntegerField()
     brand = models.ForeignKey('Brand', on_delete=models.CASCADE)
+    enterprise = models.ForeignKey(
+        'Enterprise',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='vehicles'
+    )
+    drivers = models.ManyToManyField(
+        'Driver',
+        related_name='vehicles'
+    )
+    active_driver = models.ForeignKey(
+        'Driver',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='current_vehicle'
+    )
 
     class Meta:
         verbose_name = "Транспортное средство"
@@ -59,6 +75,12 @@ class Driver(models.Model):
     second_name = models.CharField(max_length=30)
     patronymic = models.CharField(max_length=40, blank=False)
     salary = models.IntegerField()
+    enterprise = models.ForeignKey(
+        Enterprise, 
+        on_delete=models.SET_NULL, 
+        related_name='drivers',
+        null=True
+    )
 
     class Meta:
         verbose_name = "Водитель"
