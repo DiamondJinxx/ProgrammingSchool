@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
 from auto.models import (
@@ -38,6 +40,17 @@ class VehicleAdmin(admin.ModelAdmin):
     @admin.display()
     def active_driver(self, vehicle: Vehicle):
         return str(vehicle.active_driver)
+
+
+    # def save_model(self, request, obj, form, change):
+        # if obj.active_driver and form['enterprise'] != obj.enterprise:
+        #     messages.add_message(
+        #         request,
+        #         messages.ERROR,
+        #         "Нельзя изменить предприятие ТС при наличии активного водителя"
+        #     )
+        #     return
+        # return super().save_model(request, obj, form, change)
 
 
 @admin.register(VehicleType)

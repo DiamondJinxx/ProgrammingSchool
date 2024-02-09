@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -28,11 +29,10 @@ class Vehicle(models.Model):
         verbose_name = "Транспортное средство"
         verbose_name_plural = "Транспортные средства"
 
-    def save(self, *args, **kwargs):
-        old_self = Vehicle.objects.get(id=self.id)
-        if self.active_driver and self.enterprise != old_self.enterprise:
-            raise ValueError("Нельзя изменить предприятие у ТС с активным водителем")
-        super().save(*args, **kwargs)
+    def clean(self):
+        old_object = Vehicle.objects.get(id=self.id)
+        if self.active_driver and self.enterprise != old_object.enterprise:
+            raise ValidationError('Нельзя обновить предприятие у ТС с активным водителем!')
 
     def __str__(self):
         return f"{self.id}: {str(self.brand)} - {self.release_year}"
