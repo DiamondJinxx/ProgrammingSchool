@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
 from auto.models import (
+    Manager,
     Vehicle,
     VehicleType,
     Brand,
@@ -40,6 +41,13 @@ class VehicleAdmin(admin.ModelAdmin):
     @admin.display()
     def active_driver(self, vehicle: Vehicle):
         return str(vehicle.active_driver)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        manager = Manager.objects.get(user_id=request.user.id)
+        return qs.filter(enterprise__in=manager.enterprises.all())
 
 
     # def save_model(self, request, obj, form, change):
@@ -84,6 +92,12 @@ class EnterpriseAdmin(admin.ModelAdmin):
         'foundation_date', 
     ]
 
+    def get_queryset(self, request):
+        qs = super(EnterpriseAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        manager = Manager.objects.get(user_id=request.user.id)
+        return qs.filter(id__in=manager.enterprises.all())
 
 @admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):
@@ -100,3 +114,30 @@ class DriverAdmin(admin.ModelAdmin):
         'patronymic', 
         'salary', 
     ]
+
+    def get_queryset(self, request):
+        qs = super(DriverAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        manager = Manager.objects.get(user_id=request.user.id)
+        return qs.filter(enterprise__in=manager.enterprises.all())
+
+
+@admin.register(Manager)
+class ManagerAdmin(admin.ModelAdmin):
+    """Админка для манагера;"""
+    list_display = [
+        'id',
+        'user',
+    ]
+    list_display_links = [
+        'id',
+        'user',
+    ]
+
+    # def get_queryset(self, request):
+    #     qs = super().get_queryset(request)
+    #     if request.user.is_superuser:
+    #         return qs
+    #     manager = Managers.objects.get(id=request.user.id)
+    #     return qs.filter(enterprises
