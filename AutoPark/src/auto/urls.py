@@ -5,7 +5,7 @@ from auto.api.views import VehicleViewSet, DriversViewSet, EnterpriseViewSet
 
 router = SimpleRouter()
 router.register('/vehicles', VehicleViewSet)
-router.register('/enterprise', EnterpriseViewSet)
+router.register('/enterprises', EnterpriseViewSet)
 router.register('/drivers', DriversViewSet)
 
 urlpatterns = [

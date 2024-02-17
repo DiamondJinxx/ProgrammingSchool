@@ -13,6 +13,7 @@ class VehicleTypeSerializer(serializers.ModelSerializer):
 
 class BrandSerializer(serializers.ModelSerializer):
     vehicle_type_id = serializers.PrimaryKeyRelatedField(queryset=VehicleType.objects.all())
+
     class Meta:
         model = Brand
         fields = [
@@ -68,5 +69,3 @@ class DriverSerializer(serializers.ModelSerializer):
             'salary',
             'enterprise'
         ]
-
-

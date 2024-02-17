@@ -50,17 +50,6 @@ class VehicleAdmin(admin.ModelAdmin):
         return qs.filter(enterprise__in=manager.enterprises.all())
 
 
-    # def save_model(self, request, obj, form, change):
-        # if obj.active_driver and form['enterprise'] != obj.enterprise:
-        #     messages.add_message(
-        #         request,
-        #         messages.ERROR,
-        #         "Нельзя изменить предприятие ТС при наличии активного водителя"
-        #     )
-        #     return
-        # return super().save_model(request, obj, form, change)
-
-
 @admin.register(VehicleType)
 class VehicleTypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'description']
@@ -135,9 +124,3 @@ class ManagerAdmin(admin.ModelAdmin):
         'user',
     ]
 
-    # def get_queryset(self, request):
-    #     qs = super().get_queryset(request)
-    #     if request.user.is_superuser:
-    #         return qs
-    #     manager = Managers.objects.get(id=request.user.id)
-    #     return qs.filter(enterprises
