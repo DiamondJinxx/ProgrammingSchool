@@ -1,3 +1,5 @@
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from rest_framework.viewsets import ModelViewSet
 from auto.api.serializers import (
@@ -25,6 +27,7 @@ def filter_by_manager_enterprise(queryset, request, enterprise_id=False):
     return queryset
 
 
+@method_decorator(csrf_protect, name='dispatch')
 class VehicleViewSet(ModelViewSet):
     serializer_class = VehicleSerializer
     queryset = Vehicle.objects.all()
@@ -44,6 +47,7 @@ class VehicleViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
+@method_decorator(csrf_protect, name='dispatch')
 class DriversViewSet(ModelViewSet):
     serializer_class = DriverSerializer
     queryset = Driver.objects.all()
@@ -64,6 +68,7 @@ class DriversViewSet(ModelViewSet):
 
 
 
+@method_decorator(csrf_protect, name='dispatch')
 class EnterpriseViewSet(ModelViewSet):
     serializer_class = EnterpriseSerializer
     queryset = Enterprise.objects.all()
