@@ -28,8 +28,17 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class VehicleSerializer(serializers.ModelSerializer):
-    brand_id = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())
-    enterprise_id = serializers.PrimaryKeyRelatedField(queryset=Enterprise.objects.all())
+    brand_id = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all(), source="brand")
+    enterprise_id = serializers.PrimaryKeyRelatedField(
+        queryset=Enterprise.objects.all(),
+        source="enterprise",
+        allow_null=True
+    )
+    drivers = serializers.PrimaryKeyRelatedField(
+        queryset=Driver.objects.all(),
+        many=True,
+        allow_null=True,
+    )
 
     class Meta:
         model = Vehicle
@@ -43,6 +52,13 @@ class VehicleSerializer(serializers.ModelSerializer):
             'active_driver',
             'drivers'
         ]
+
+    # def create(self, validated_data):
+    #     brand = validated_data.get("brand_id")
+    #     validated_data["brand_id"] = brand.id if brand else None
+    #     brand = validated_data.get("brand_id")
+    #     validated_data["brand_id"] = brand.id if brand else None
+    #     return super().create(validated_data)
 
 
 class EnterpriseSerializer(serializers.ModelSerializer):

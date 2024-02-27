@@ -16,7 +16,7 @@ class Vehicle(models.Model):
     )
     drivers = models.ManyToManyField(
         'Driver',
-        related_name='vehicles'
+        related_name='vehicles',
     )
     active_driver = models.OneToOneField(
         'Driver',
@@ -64,6 +64,9 @@ class Brand(models.Model):
 
     def __str__(self):
         return f"{self.name}: {self.vehicle_type.description}"
+
+    # def __int__(self):
+    #     return self.id
 
 
 class Enterprise(models.Model):

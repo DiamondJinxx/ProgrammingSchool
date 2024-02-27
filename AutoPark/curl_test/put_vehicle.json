@@ -1,0 +1,9 @@
+{
+    "price": 40000,
+    "mileage": 3000,
+    "release_year": 2012,
+    "brand_id": 2,
+    "enterprise_id": 2,
+    "active_driver": null,
+    "drivers": []
+}
