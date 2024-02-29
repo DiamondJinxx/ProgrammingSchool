@@ -15,7 +15,7 @@ from auto.models import (
     Manager,
     Vehicle, 
 )
-from auto.permissions import IsSameEnterprise
+from auto.permissions import IsSameEnterprise, IsManager
 
 
 def filter_by_manager_enterprise(queryset, request, enterprise_id=False):
@@ -33,7 +33,7 @@ def filter_by_manager_enterprise(queryset, request, enterprise_id=False):
 class VehicleViewSet(ModelViewSet):
     serializer_class = VehicleSerializer
     queryset = Vehicle.objects.all()
-    permission_classes = [IsAuthenticated, IsSameEnterprise]
+    permission_classes = [IsAuthenticated, IsManager, IsSameEnterprise]
 
     def list(self, request, *args, **kwargs):
         self.queryset = filter_by_manager_enterprise(self.queryset, request)
@@ -44,7 +44,7 @@ class VehicleViewSet(ModelViewSet):
 class DriversViewSet(ModelViewSet):
     serializer_class = DriverSerializer
     queryset = Driver.objects.all()
-    permission_classes = [IsAuthenticated, IsSameEnterprise]
+    permission_classes = [IsAuthenticated, IsManager, IsSameEnterprise]
 
     def list(self, request, *args, **kwargs):
         self.queryset = filter_by_manager_enterprise(self.queryset, request)
@@ -55,7 +55,7 @@ class DriversViewSet(ModelViewSet):
 class EnterpriseViewSet(ModelViewSet):
     serializer_class = EnterpriseSerializer
     queryset = Enterprise.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsManager]
 
     def list(self, request, *args, **kwargs):
         self.queryset = filter_by_manager_enterprise(self.queryset, request, enterprise_id=True)
