@@ -101,7 +101,7 @@ class Driver(models.Model):
         verbose_name_plural = "Водители"
 
     def __str__(self):
-        return f"{self.first_name} {self.second_name} {self.patronymic}"
+        return f"{self.second_name} {self.first_name} {self.patronymic}"
 
 
 class Manager(models.Model):
