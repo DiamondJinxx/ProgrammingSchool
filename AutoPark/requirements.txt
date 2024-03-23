@@ -9,7 +9,10 @@ asgiref==3.7.2
 django==5.0.1
     # via
     #   -r requirements.in
+    #   django-bootstrap5
     #   djangorestframework
+django-bootstrap5==23.4
+    # via -r requirements.in
 django-environ==0.11.2
     # via -r requirements.in
 djangorestframework==3.14.0
@@ -42,7 +45,7 @@ python-dateutil==2.9.0.post0
     # via faker
 pytz==2023.3.post1
     # via djangorestframework
-ruff==0.3.2
+ruff==0.3.4
     # via -r dev-requirements.in
 six==1.16.0
     # via python-dateutil

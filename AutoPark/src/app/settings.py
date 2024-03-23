@@ -43,6 +43,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'auto',
     'rest_framework',
+    'django_bootstrap5',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -144,3 +145,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 30,
 }
+
+LOGIN_REDIRECT_URL = '/api/v1/auto/enterprises'

@@ -19,6 +19,8 @@ from django.urls import include, path
 urlpatterns = [
     path('api/', include('app.urls.api.v1')),
     path('admin/', admin.site.urls),
+    path('', include('rest_framework.urls', namespace='rest_framework')),
+    # path('', include('app.urls.login', namespace='rest_framework')),
 ]
 
 admin.site.site_header = "Панель администрированние"
