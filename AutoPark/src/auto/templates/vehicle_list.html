@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul>
+    {% for vehicle in vehicles %}
+    <li><a href="{{vehicle.id }}">{{ vehicle.id }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

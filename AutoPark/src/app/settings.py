@@ -146,4 +146,4 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 30,
 }
 
-LOGIN_REDIRECT_URL = '/api/v1/auto/enterprises'
+LOGIN_REDIRECT_URL = '/user/enterprises'

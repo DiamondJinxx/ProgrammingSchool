@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul>
+    {% for enterprise in enterprises %}
+    <li><a href="{{ enterprise.id }}/vehicles/">{{ enterprise.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

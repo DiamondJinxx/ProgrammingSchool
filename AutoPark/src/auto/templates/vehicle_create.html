@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load rest_framework %}
+
+{% block content %}
+<form action="{% url 'user-vehicle-create' enterprise_id=vehicle.enterprise_id vehicle_id=vehicle.id %}" method="POST">
+    {% csrf_token %}
+    {% render_form serializer %}
+    <input type="submit" value="Сохранить">
+</form>
+{% endblock %}
