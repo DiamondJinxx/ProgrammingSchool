@@ -1,9 +1,15 @@
 {% extends "base.html" %}
+{% load django_bootstrap5 %}
 
 {% block content %}
 <ul>
     {% for enterprise in enterprises %}
-    <li><a href="{{ enterprise.id }}/vehicles/">{{ enterprise.name }}</a></li>
+    <div>
+        {% bootstrap_button enterprise.name href=enterprise.vehicles_list_url %}
+        <p>
+
+        </p>
+    </div>
     {% endfor %}
 </ul>
 {% endblock %}

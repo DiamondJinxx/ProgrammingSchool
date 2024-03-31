@@ -48,3 +48,37 @@ class UserVehicleDetail(APIView):
         print('before save')
         serializer.save()
         return redirect('user-vehicle-list', enterprise_id=enterprise_id)
+
+class UserVehicleCreate(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'vehicle_create.html'
+
+    def get(self, request, enterprise_id):
+        print(f'enterprise is {enterprise_id}')
+        vehicle = models.Vehicle()
+        vehicle.enterprise_id = enterprise_id
+        serializer = VehicleSerializer(vehicle)
+        return Response({'serializer': serializer, 'vehicle': vehicle})
+
+    def post(self, request, enterprise_id):
+        # print('post method')
+        # print(f'enerprise {enterprise_id}')
+        # print(f'vehicle {vehicle_id}')
+        # print(f'request_data {request.data}')
+        vehicle = models.Vehicle()
+        vehicle.enterprise_id = enterprise_id
+        serializer = VehicleSerializer(vehicle, data=request.data)
+        if not serializer.is_valid():
+            return Response({'serializer': serializer, 'vehicle': vehicle})
+        print('before save')
+        serializer.save()
+        return redirect('user-vehicle-list', enterprise_id=enterprise_id)
+
+
+class UserVehicleDelete(APIView):
+
+    def get(self, request, enterprise_id, vehicle_id):
+        print('vehicle was deleted')
+        vehicle = get_object_or_404(models.Vehicle, pk=vehicle_id)
+        vehicle.delete()
+        return redirect('user-vehicle-list', enterprise_id=enterprise_id)

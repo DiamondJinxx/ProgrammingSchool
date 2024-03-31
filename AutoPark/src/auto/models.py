@@ -38,6 +38,12 @@ class Vehicle(models.Model):
     def __str__(self):
         return f"{self.id}: {str(self.brand)} - {self.release_year}"
 
+    def stringify(self):
+        return str(self)
+
+    def link_to_delete(self):
+        return f"{self.id}/delete"
+
 
 class VehicleType(models.Model):
     description = models.CharField(max_length=40)
@@ -81,6 +87,9 @@ class Enterprise(models.Model):
 
     def __str__(self):
         return f"{self.name}({self.foundation_date})"
+
+    def vehicles_list_url(self):
+        return f"{self.id}/vehicles"
 
 
 class Driver(models.Model):
