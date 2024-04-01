@@ -1,6 +1,5 @@
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from django.http import JsonResponse
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from auto.api.serializers import (

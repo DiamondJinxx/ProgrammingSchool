@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 class Vehicle(models.Model):
@@ -8,6 +9,7 @@ class Vehicle(models.Model):
     mileage = models.IntegerField()
     release_year = models.IntegerField()
     brand = models.ForeignKey('Brand', on_delete=models.CASCADE)
+    time_of_purchase = models.DateTimeField()
     enterprise = models.ForeignKey(
         'Enterprise',
         on_delete=models.SET_NULL,
@@ -77,9 +79,11 @@ class Brand(models.Model):
 
 class Enterprise(models.Model):
     """Модель предприятия"""
+    TIMEZONES = tuple(zip(timezone.zoneinfo.available_timezones(), timezone.zoneinfo.available_timezones()))
     name = models.CharField(max_length=240)
     city = models.CharField(max_length=3)
     foundation_date = models.DateField()
+    time_zone = models.CharField(max_length=32, choices=TIMEZONES, default='UTC')
 
     class Meta:
         verbose_name = "Предприятие"

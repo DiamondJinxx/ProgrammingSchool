@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load rest_framework %}
+{% load tz %}
 
 {% block content %}
 <form action="{% url 'user-vehicle-detail' enterprise_id=vehicle.enterprise_id vehicle_id=vehicle.id %}" method="POST">
     {% csrf_token %}
+    {% get_current_timezone as TIME_ZONE %}
+    <p> Время покупки автомобиля: {{ vehicle.time_of_purchase}}</p>
     {% render_form serializer %}
     <input type="submit" value="Сохранить">
 </form>

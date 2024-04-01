@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from auto.models import Brand, Vehicle, VehicleType, Enterprise, Driver
 
@@ -47,18 +48,20 @@ class VehicleSerializer(serializers.ModelSerializer):
             'price',
             'mileage',
             'release_year',
+            # 'time_of_purchase',
             'brand_id',
             'enterprise_id',
             'active_driver',
             'drivers'
         ]
 
-    # def create(self, validated_data):
-    #     brand = validated_data.get("brand_id")
-    #     validated_data["brand_id"] = brand.id if brand else None
-    #     brand = validated_data.get("brand_id")
-    #     validated_data["brand_id"] = brand.id if brand else None
-    #     return super().create(validated_data)
+    def to_representation(self, instance):
+        tz = timezone.zoneinfo.ZoneInfo(instance.enterprise.time_zone)
+        self.fields['time_of_purchase'] = serializers.DateTimeField(
+            default_timezone=tz,
+            # initial=lambda: instance.time_of_purchase.strftime("%%Y-%%m-%%d %%H:%%M")
+        )
+        return super().to_representation(instance)
 
 
 class EnterpriseSerializer(serializers.ModelSerializer):

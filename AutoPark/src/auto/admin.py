@@ -19,6 +19,8 @@ class VehicleForm(forms.ModelForm):
         drivers = Driver.objects.filter(id=-1)
         if self.instance.enterprise:
             drivers = Driver.objects.filter(enterprise__id=self.instance.enterprise.id)
+        print('type is ')
+        print(self.fields)
         self.fields['drivers'].queryset = drivers
         self.fields['drivers'].required=False
         self.fields['active_driver'].queryset = drivers
@@ -33,6 +35,7 @@ class VehicleAdmin(admin.ModelAdmin):
         'price',
         'mileage',
         'release_year',
+        'time_of_purchase',
         'brand',
         'enterprise',
         'active_driver'
@@ -79,6 +82,7 @@ class EnterpriseAdmin(admin.ModelAdmin):
         'name',
         'city',
         'foundation_date', 
+        'time_zone',
     ]
 
     def get_queryset(self, request):

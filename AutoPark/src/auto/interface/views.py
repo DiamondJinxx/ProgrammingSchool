@@ -34,6 +34,7 @@ class UserVehicleDetail(APIView):
     def get(self, request, enterprise_id, vehicle_id):
         vehicle = get_object_or_404(models.Vehicle, pk=vehicle_id)
         serializer = VehicleSerializer(vehicle)
+        print(serializer.data)
         return Response({'serializer': serializer, 'vehicle': vehicle})
 
     def post(self, request, enterprise_id, vehicle_id):
