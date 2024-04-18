@@ -1,7 +1,6 @@
 deps:
-	pip-compile requirements.in
-	pip-compile dev-requirements.in
-	pip-sync requirements.txt dev-requirements.txt
+	pip-compile requirements.in  dev-requirements.in --resolver=backtracking -o requirements.txt
+	pip-sync
 
 tests:
 	cd src && pytest

@@ -54,6 +54,7 @@ class VehicleFactory(factory.django.DjangoModelFactory):
     mileage = factory.LazyFunction(lambda: random.randint(10000, 100000))
     release_year = factory.LazyFunction(lambda: random.randint(1960, 2024))
     brand = factory.SubFactory(BrandFactory)
+    time_of_purchase = factory.LazyFunction(datetime.datetime.utcnow)
     enterprise = None
     active_driver = None
 

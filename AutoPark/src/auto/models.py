@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.gis.db import models as gis_models
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -129,7 +130,12 @@ class Manager(models.Model):
         verbose_name = "Менеджер"
         verbose_name_plural = "Менеджеры"
 
-
     def __str__(self):
         return self.user.username
 
+
+class Geotag(models.Model):
+    """ Точка для трека."""
+    point = gis_models.PointField()
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='geotags')
+    timestamp = models.DateTimeField(auto_now=True)

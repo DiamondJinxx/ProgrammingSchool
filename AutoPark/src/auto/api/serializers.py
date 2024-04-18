@@ -1,6 +1,15 @@
 from django.utils import timezone
 from rest_framework import serializers
-from auto.models import Brand, Vehicle, VehicleType, Enterprise, Driver
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+
+from auto.models import (
+    Brand,
+    Vehicle,
+    VehicleType,
+    Enterprise,
+    Driver,
+    Geotag,
+)
 
 
 class VehicleTypeSerializer(serializers.ModelSerializer):
@@ -88,3 +97,50 @@ class DriverSerializer(serializers.ModelSerializer):
             'salary',
             'enterprise'
         ]
+
+
+class GeotagSerializer(serializers.ModelSerializer):
+    vehicle_id = serializers.PrimaryKeyRelatedField(
+        queryset=Vehicle.objects.all(),
+        source="vehicle",
+    )
+
+    class Meta:
+        model = Geotag
+        fields = [
+            'vehicle_id',
+            'timestamp',
+            'point'
+        ]
+
+    def to_representation(self, instance):
+        tz = timezone.zoneinfo.ZoneInfo(instance.vehicle.enterprise.time_zone)
+        self.fields['timestamp'] = serializers.DateTimeField(
+            default_timezone=tz,
+            # initial=lambda: instance.time_of_purchase.strftime("%%Y-%%m-%%d %%H:%%M")
+        )
+        return super().to_representation(instance)
+
+
+class GeotagGeoJsonSerializer(GeoFeatureModelSerializer):
+    vehicle_id = serializers.PrimaryKeyRelatedField(
+        queryset=Vehicle.objects.all(),
+        source="vehicle",
+    )
+
+    class Meta:
+        model = Geotag
+        geo_field = "point"
+        fields = [
+            'vehicle_id',
+            'timestamp',
+            'point'
+        ]
+
+    def to_representation(self, instance):
+        tz = timezone.zoneinfo.ZoneInfo(instance.vehicle.enterprise.time_zone)
+        self.fields['timestamp'] = serializers.DateTimeField(
+            default_timezone=tz,
+            # initial=lambda: instance.time_of_purchase.strftime("%%Y-%%m-%%d %%H:%%M")
+        )
+        return super().to_representation(instance)
