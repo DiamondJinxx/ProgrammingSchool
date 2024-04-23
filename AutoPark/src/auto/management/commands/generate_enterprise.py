@@ -1,6 +1,5 @@
-from django.core.management.base import BaseCommand, CommandError
-import  random
-import logging
+from django.core.management.base import BaseCommand
+import random
 
 from . import _factories as factory
 

@@ -68,7 +68,6 @@ class EnterpriseViewSet(ModelViewSet):
 
 @method_decorator(csrf_protect, name='dispatch')
 class GeotagViewSet(ModelViewSet):
-    serializer_class = GeotagSerializer
     queryset = Geotag.objects.all()
     permission_classes = [IsAuthenticated, IsManager]
 
@@ -76,28 +75,32 @@ class GeotagViewSet(ModelViewSet):
         vehicle_id = self.kwargs.get('vehicle_id')
         if not vehicle_id:
             raise
-        tags = Geotag.objects.filter(vehicle=vehicle_id)
         time_from = self.request.query_params.get('time_from')
         time_to = self.request.query_params.get('time_to')
+        tags = Geotag.objects.filter(vehicle=vehicle_id)
         if time_from:
             time_from = datetime.datetime.fromisoformat(time_from)
-            time_from = datetime.datetime(
-                time_from.year,
-                time_from.month,
-                time_from.day,
-                time_from.hour,
-                time_from.minute,
-                time_from.second,
-                tzinfo=datetime.timezone.utc
-            )
-            print(time_from)
+            time_from = self.set_utc(time_from)
             tags = tags.filter(timestamp__gt=time_from)
-            print(tags.query)
         if time_to:
+            time_to = self.set_utc(time_to)
             tags = tags.filter(timestamp__lt=time_to)
         tags = tags.order_by("-timestamp")
         return tags
 
     def get_serializer_class(self, *args, **kwargs):
         geo_json = self.request.query_params.get('geoJson')
-        return GeotagGeoJsonSerializer if geo_json else self.serializer_class
+        return GeotagGeoJsonSerializer if geo_json else GeotagSerializer
+
+    @staticmethod
+    def set_utc(time_from: datetime.datetime):
+        """Set utc time to datetime"""
+        return datetime.datetime(
+            time_from.year,
+            time_from.month,
+            time_from.day,
+            time_from.hour,
+            time_from.minute,
+            time_from.second,
+            tzinfo=datetime.timezone.utc
+        )

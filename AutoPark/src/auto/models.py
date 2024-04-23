@@ -138,4 +138,4 @@ class Geotag(models.Model):
     """ Точка для трека."""
     point = gis_models.PointField()
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='geotags')
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField()
