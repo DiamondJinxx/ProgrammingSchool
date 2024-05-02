@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand
 from django.contrib.gis.geos import Point
 import random
 import openrouteservice
-from geopy.distance import distance
 from datetime import datetime, timedelta
 from geopy.distance import distance
 

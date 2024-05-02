@@ -9,6 +9,7 @@ from auto.models import (
     Enterprise,
     Driver,
     Geotag,
+    Trip,
 )
 
 
@@ -140,6 +141,33 @@ class GeotagGeoJsonSerializer(GeoFeatureModelSerializer):
     def to_representation(self, instance):
         tz = timezone.zoneinfo.ZoneInfo(instance.vehicle.enterprise.time_zone)
         self.fields['timestamp'] = serializers.DateTimeField(
+            default_timezone=tz,
+            # initial=lambda: instance.time_of_purchase.strftime("%%Y-%%m-%%d %%H:%%M")
+        )
+        return super().to_representation(instance)
+
+
+class TripSerializer(serializers.ModelSerializer):
+    vehicle_id = serializers.PrimaryKeyRelatedField(
+        queryset=Vehicle.objects.all(),
+        source="vehicle",
+    )
+
+    class Meta:
+        model = Trip
+        fields = [
+            'vehicle_id',
+            'start_date',
+            'end_date'
+        ]
+
+    def to_representation(self, instance):
+        tz = timezone.zoneinfo.ZoneInfo(instance.vehicle.enterprise.time_zone)
+        self.fields['start_date'] = serializers.DateTimeField(
+            default_timezone=tz,
+            # initial=lambda: instance.time_of_purchase.strftime("%%Y-%%m-%%d %%H:%%M")
+        )
+        self.fields['end_date'] = serializers.DateTimeField(
             default_timezone=tz,
             # initial=lambda: instance.time_of_purchase.strftime("%%Y-%%m-%%d %%H:%%M")
         )

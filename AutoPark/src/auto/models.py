@@ -139,3 +139,11 @@ class Geotag(models.Model):
     point = gis_models.PointField()
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='geotags')
     timestamp = models.DateTimeField()
+
+
+class Trip(models.Model):
+    """Поездка автомобиля."""
+
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='trips')
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()

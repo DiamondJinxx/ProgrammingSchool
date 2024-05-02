@@ -18,6 +18,7 @@ from auto.models import (
     Manager,
     Vehicle,
     Geotag,
+    Trip,
 )
 from auto.permissions import IsSameEnterprise, IsManager
 
@@ -66,8 +67,23 @@ class EnterpriseViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
+class ModelViewUTC(ModelViewSet):
+    @staticmethod
+    def set_utc(time_from: datetime.datetime):
+        """Set utc time to datetime"""
+        return datetime.datetime(
+            time_from.year,
+            time_from.month,
+            time_from.day,
+            time_from.hour,
+            time_from.minute,
+            time_from.second,
+            tzinfo=datetime.timezone.utc
+        )
+
+
 @method_decorator(csrf_protect, name='dispatch')
-class GeotagViewSet(ModelViewSet):
+class GeotagViewSet(ModelViewUTC):
     queryset = Geotag.objects.all()
     permission_classes = [IsAuthenticated, IsManager]
 
@@ -83,6 +99,7 @@ class GeotagViewSet(ModelViewSet):
             time_from = self.set_utc(time_from)
             tags = tags.filter(timestamp__gt=time_from)
         if time_to:
+            time_to = datetime.datetime.fromisoformat(time_to)
             time_to = self.set_utc(time_to)
             tags = tags.filter(timestamp__lt=time_to)
         tags = tags.order_by("-timestamp")
@@ -92,15 +109,34 @@ class GeotagViewSet(ModelViewSet):
         geo_json = self.request.query_params.get('geoJson')
         return GeotagGeoJsonSerializer if geo_json else GeotagSerializer
 
-    @staticmethod
-    def set_utc(time_from: datetime.datetime):
-        """Set utc time to datetime"""
-        return datetime.datetime(
-            time_from.year,
-            time_from.month,
-            time_from.day,
-            time_from.hour,
-            time_from.minute,
-            time_from.second,
-            tzinfo=datetime.timezone.utc
-        )
+
+@method_decorator(csrf_protect, name='dispatch')
+class TripViewSet(ModelViewUTC):
+    queryset = Geotag.objects.all()
+    serializer_class = GeotagSerializer
+    permission_classes = [IsAuthenticated, IsManager]
+
+    def get_queryset(self):
+        vehicle_id = self.kwargs.get('vehicle_id')
+        if not vehicle_id:
+            raise
+        date_from = self.request.query_params.get('date_from')
+        date_to = self.request.query_params.get('date_to')
+        trips = Trip.objects.filter(vehicle=vehicle_id)
+        if date_from:
+            date_from = datetime.datetime.fromisoformat(date_from)
+            date_from = self.set_utc(date_from)
+            trips = trips.filter(start_date__gt=date_from)
+        if date_to:
+            date_to = datetime.datetime.fromisoformat(date_to)
+            date_to = self.set_utc(date_to)
+            trips = trips.filter(end_date__lt=date_to)
+        if not trips:
+            # simple hack returning empty json
+            return Geotag.objects.filter(id=-1)
+        trips = trips.order_by("start_date")
+        timestamp_from = trips.first().start_date
+        timestamp_to = trips.last().end_date
+        tags = Geotag.objects.filter(timestamp__gt=timestamp_from, timestamp__lt=timestamp_to)
+        tags = tags.order_by("-timestamp")
+        return tags

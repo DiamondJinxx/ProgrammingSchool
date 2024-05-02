@@ -5,12 +5,14 @@ from auto.api.views import (
     DriversViewSet,
     EnterpriseViewSet,
     GeotagViewSet,
+    TripViewSet,
 )
 
 
 router = SimpleRouter()
 router.register('/vehicles', VehicleViewSet)
 router.register('/vehicles/(?P<vehicle_id>.+)/geotags', GeotagViewSet)
+router.register('/vehicles/(?P<vehicle_id>.+)/trips', TripViewSet)
 router.register('/enterprises', EnterpriseViewSet)
 router.register('/drivers', DriversViewSet)
 
