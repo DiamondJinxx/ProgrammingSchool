@@ -148,18 +148,33 @@ class GeotagGeoJsonSerializer(GeoFeatureModelSerializer):
 
 
 class TripSerializer(serializers.ModelSerializer):
-    vehicle_id = serializers.PrimaryKeyRelatedField(
-        queryset=Vehicle.objects.all(),
-        source="vehicle",
-    )
+    start_point = serializers.SerializerMethodField()
+    end_point = serializers.SerializerMethodField()
 
     class Meta:
         model = Trip
         fields = [
-            'vehicle_id',
             'start_date',
-            'end_date'
+            'end_date',
+            'start_point',
+            'end_point',
         ]
+
+    def get_start_point(self, obj):
+        return GeotagSerializer(
+            Geotag.objects.filter(timestamp__gte=obj.start_date).order_by('timestamp').first()
+        ).data['point']['coordinates']
+
+    def get_end_point(self, obj):
+        return GeotagSerializer(
+            Geotag.objects.filter(timestamp__lte=obj.end_date).order_by('-timestamp').first()
+        ).data['point']['coordinates']
+
+    # def get_start_point_repr(self, obj):
+    #     return str(self.get_start_point(obj))
+    #
+    # def get_end_point_repr(self, obj):
+    #     return str(self.get_end_point(obj))
 
     def to_representation(self, instance):
         tz = timezone.zoneinfo.ZoneInfo(instance.vehicle.enterprise.time_zone)

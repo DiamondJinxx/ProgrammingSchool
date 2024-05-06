@@ -1,4 +1,5 @@
 import datetime
+from geopy.geocoders import Yandex
 
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
@@ -10,6 +11,7 @@ from auto.api.serializers import (
     EnterpriseSerializer,
     GeotagSerializer,
     GeotagGeoJsonSerializer,
+    TripSerializer,
 )
 
 from auto.models import (
@@ -21,6 +23,7 @@ from auto.models import (
     Trip,
 )
 from auto.permissions import IsSameEnterprise, IsManager
+from app.settings import env
 
 
 def filter_by_manager_enterprise(queryset, request, enterprise_id=False):
@@ -111,7 +114,7 @@ class GeotagViewSet(ModelViewUTC):
 
 
 @method_decorator(csrf_protect, name='dispatch')
-class TripViewSet(ModelViewUTC):
+class TripGeotagsViewSet(ModelViewUTC):
     queryset = Geotag.objects.all()
     serializer_class = GeotagSerializer
     permission_classes = [IsAuthenticated, IsManager]
@@ -140,3 +143,50 @@ class TripViewSet(ModelViewUTC):
         tags = Geotag.objects.filter(timestamp__gt=timestamp_from, timestamp__lt=timestamp_to)
         tags = tags.order_by("-timestamp")
         return tags
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class TripViewSet(ModelViewUTC):
+    queryset = Trip.objects.all()
+    serializer_class = TripSerializer
+    permission_classes = [IsAuthenticated, IsManager]
+
+    def get_queryset(self):
+        vehicle_id = self.kwargs.get('vehicle_id')
+        if not vehicle_id:
+            raise
+        date_from = self.request.query_params.get('date_from')
+        date_to = self.request.query_params.get('date_to')
+        trips = Trip.objects.filter(vehicle=vehicle_id)
+        print(trips)
+        if date_from:
+            date_from = datetime.datetime.fromisoformat(date_from)
+            date_from = self.set_utc(date_from)
+            print(date_from)
+            trips = trips.filter(start_date__gte=date_from)
+        if date_to:
+            date_to = datetime.datetime.fromisoformat(date_to)
+            date_to = self.set_utc(date_to)
+            print(date_to)
+            trips = trips.filter(end_date__lte=date_to)
+        print(trips.query)
+        # if not trips:
+        #     # simple hack returning empty json
+        #     return Trip.objects.filter(id=-1)
+        return trips
+
+    def list(self, request, *args, **kwargs):
+        responce = super().list(request, *args, **kwargs)
+
+        geolocator = Yandex(api_key=env('GEODECODER_API_KEY'))
+        for record in responce.data['results']:
+            record['start_point_repr'] = self.point_representation(geolocator, record['start_point'])
+            record['end_point_repr'] = self.point_representation(geolocator, record['end_point'])
+        return responce
+
+    def point_representation(self, geolocator, point) -> str:
+        str_point = str(point[0]) + ', ' + str(point[1])
+        location = geolocator.reverse(str_point)
+        if not location:
+            return "Undefined"
+        return str(location)
