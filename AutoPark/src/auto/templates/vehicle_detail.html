@@ -1,8 +1,22 @@
 {% extends "base.html" %}
 {% load rest_framework %}
+{% load django_bootstrap5 %}
 {% load tz %}
 
 {% block content %}
+
+{#    {% for trip in vehicle.orm_trips %}#}
+{#        <div>#}
+{#            {% bootstrap_button trip href=trip.detail_url %}#}
+{#            <p>#}
+{##}
+{#            </p>#}
+{#        </div>#}
+{#    {% endfor %}#}
+    <div>
+        {% bootstrap_button 'Поездки' href='trips' %}
+    </div>
+
 <form action="{% url 'user-vehicle-detail' enterprise_id=vehicle.enterprise_id vehicle_id=vehicle.id %}" method="POST">
     {% csrf_token %}
     {% get_current_timezone as TIME_ZONE %}
@@ -10,4 +24,5 @@
     {% render_form serializer %}
     <input type="submit" value="Сохранить">
 </form>
+
 {% endblock %}

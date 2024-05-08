@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block head %}
+    {{ block.super }}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=bf8286b0-3c10-48fc-bc6f-4980c148df6b&lang=ru_RU" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+        function init(){
+            var myMap = new ymaps.Map("map", {
+                center: [55.76, 37.64],
+                zoom: 7
+            });
+            {% for trip in trips %}
+                var myPolyline = new ymaps.GeoObject({
+                    geometry: {
+                        type: "LineString",
+                        coordinates: {{ trip.points }}
+                    }
+                });
+                myMap.geoObjects.add(myPolyline);
+            {% endfor %}
+
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <hr>
+    {% for trip in trips %}
+        {#        <div style="border:1px solid black; border-radius: 10px;">#}
+        <div>
+            <p>{{ trip }}</p>
+        </div>
+    {% endfor %}
+
+{#    <img src="https://static-maps.yandex.ru/1.x/?ll=37.663015%2C55.733884&z=17&l=map&pt=37.663185,55.733881,comma" alt="" />#}
+    <div id="map" style="width: 600px; height: 400px"></div>
+
+{% endblock %}

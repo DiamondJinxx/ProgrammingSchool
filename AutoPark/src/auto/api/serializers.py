@@ -62,7 +62,7 @@ class VehicleSerializer(serializers.ModelSerializer):
             'brand_id',
             'enterprise_id',
             'active_driver',
-            'drivers'
+            'drivers',
         ]
 
     def to_representation(self, instance):

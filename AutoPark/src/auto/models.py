@@ -147,3 +147,11 @@ class Trip(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='trips')
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+
+    def __str__(self):
+        return (f"Поездка {self.pk},"
+                f" c {self.start_date.strftime('%Y-%m-%d %H:%M:%S')}"
+                f" по {self.end_date.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    def detail_url(self):
+        return f"trips/{self.id}"
