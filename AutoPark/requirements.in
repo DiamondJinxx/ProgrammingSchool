@@ -2,3 +2,8 @@ Django
 djangorestframework
 django-environ
 psycopg2-binary
+factory_boy
+django-bootstrap5
+djangorestframework-gis
+openrouteservice
+geopy

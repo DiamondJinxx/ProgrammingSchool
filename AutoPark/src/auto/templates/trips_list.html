@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block head %}
+    {{ block.super }}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey={{ map_api_key }}&lang=ru_RU" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+        function init(){
+            var myMap = new ymaps.Map("map", {
+                center: [55.76, 37.64],
+                zoom: 7
+            });
+            {% for trip in trips %}
+                var myPolyline = new ymaps.GeoObject({
+                    geometry: {
+                        type: "LineString",
+                        coordinates: {{ trip.points }}
+                    },
+                    properties: {
+                        hintContent: "{{ trip }}",
+                    }},
+                    {
+                        // Установка ширины до 5 пикселей.
+                        strokeWidth: 5,
+                        // Установка цвета линии.
+                        strokeColor: "#FF0000"
+                    },
+                );
+                myMap.geoObjects.add(myPolyline);
+            {% endfor %}
+
+        }
+
+        function set_date_range(){
+            date_from_elem = document.querySelector("#time_from");
+            date_to_elem = document.querySelector("#time_to");
+            btn = document.querySelector("#request_btn");
+            request_data = `?time_from=${date_from_elem.value}&time_to=${date_to_elem.value}`;
+            window.location.href = request_data
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <input
+                id="time_from"
+                type="datetime-local"
+                name="filterdate"
+                min="2020-06-01T08:30"
+                max="2024-12-30T16:30"
+                value="{{ time_from }}"
+                required />
+        <span class="validity"></span>
+        <input
+                id="time_to"
+                type="datetime-local"
+                name="filterdate"
+                min="2020-06-01T08:30"
+                max="2024-12-30T16:30"
+                value="{{ time_to }}"
+                required />
+    </div>
+    {% bootstrap_button "Запрос поездок" id='request_btn' onClick="set_date_range()"%}
+
+    <hr>
+    {% if not trips %}
+        <p>За выбранный период времени поездок не обнаружено!</p>
+    {% endif %}
+
+    {% if trips %}
+        <div id="map" style="width: 600px; height: 400px"></div>
+    {% endif %}
+
+{% endblock %}

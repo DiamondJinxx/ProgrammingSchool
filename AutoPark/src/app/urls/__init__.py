@@ -1,6 +1,5 @@
 """
 URL configuration for app project.
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
 Examples:
@@ -15,8 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from rest_framework import urls
 
 urlpatterns = [
+    path('api/', include('app.urls.api.v1')),
     path('admin/', admin.site.urls),
+    path('', include('rest_framework.urls', namespace='rest_framework')),
+    # path('', include('app.urls.login', namespace='rest_framework')),
+    path('user/', include('auto.interface')),
 ]
+
+admin.site.site_header = "Панель администрированние"
+admin.site.index_title = "Автопарк"

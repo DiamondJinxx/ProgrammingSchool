@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+
+{% block content %}
+    {% block menu_buttons %}
+        {% bootstrap_button "Создать машинку" href='create'  %}
+    {% endblock menu_buttons %}
+    <hr>
+    {% for vehicle in vehicles %}
+{#        <div style="border:1px solid black; border-radius: 10px;">#}
+        <div>
+            <p>{{ vehicle.stringify }}</p>
+            {% bootstrap_button "Редактировать" href=vehicle.id %}
+            {% bootstrap_button "Удалить" href=vehicle.link_to_delete %}
+        </div>
+    {% endfor %}
+{% endblock %}

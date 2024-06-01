@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<ul>
+    {% for enterprise in enterprises %}
+    <div>
+        {% bootstrap_button enterprise.name href=enterprise.vehicles_list_url %}
+        <p>
+
+        </p>
+    </div>
+    {% endfor %}
+</ul>
+{% endblock %}

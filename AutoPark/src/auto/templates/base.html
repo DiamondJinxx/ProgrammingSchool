@@ -1,0 +1,26 @@
+{% extends "rest_framework/base.html" %}
+
+{# Load the tag library #}
+{% load django_bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block bootstrap_theme %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@3.4.1/flatly/bootstrap.min.css" type="text/css">
+{% endblock %}
+
+
+{% block branding %}
+<h3 style="margin: 0 0 20px;">Парк Машинок!</h3>
+{% endblock %}
+
+{# занулим блок с навигацией - мне он не нужен#}
+{% block breadcrumbs %}
+    <a href="{% url 'user-enterprises-list' %}">Предприятия</a>
+    <hr>
+{% endblock %}

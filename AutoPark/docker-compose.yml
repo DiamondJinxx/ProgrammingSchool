@@ -2,6 +2,16 @@ version: '3'
 
 services:
   postgres:
-    image: postgres:13-alpine
+    image: postgres
+    container_name: auto_park_postgres
+    volumes:
+    - pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+volumes:
+  pgdata:
