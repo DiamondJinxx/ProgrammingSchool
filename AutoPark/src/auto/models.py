@@ -155,3 +155,35 @@ class Trip(models.Model):
 
     def detail_url(self):
         return f"trips/{self.id}"
+
+
+class AbstractReport(models.Model):
+    """Абстрактная модель Отчетов."""
+    class PeriodType(models.TextChoices):
+        DAY = "day"
+        MONTH = "month"
+        HALF_YEAR = "half_year"
+
+    class Type(models.TextChoices):
+        MILEAGE = "mileage"
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.PROTECT, related_name='reports')
+    name = models.TextField()
+    period = models.CharField(
+        max_length=20,
+        choices=PeriodType.choices,
+    )
+    type = models.TextField()
+    result = models.JSONField(null=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+
+    class Meta:
+        abstract = True
+
+
+class MileageReport(AbstractReport):
+    """Модель отчета о пробеге"""
+    type = models.TextField(default=AbstractReport.Type.MILEAGE)
+
+    def link_to_detail(self) -> str:
+        return f"reports/{self.id}"

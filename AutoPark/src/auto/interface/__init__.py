@@ -6,6 +6,8 @@ from auto.interface.views import (
     UserVehicleCreate,
     UserVehicleDelete,
     UserTripsList,
+    UserReportsList,
+    UserReportsMileageDetail,
 )
 
 urlpatterns = [
@@ -38,5 +40,15 @@ urlpatterns = [
         'enterprises/<int:enterprise_id>/vehicles/<int:vehicle_id>/trips',
         UserTripsList.as_view(),
         name='user-vehicle-trip-list'
+    ),
+    path(
+        'enterprises/<int:enterprise_id>/vehicles/<int:vehicle_id>/reports',
+        UserReportsList.as_view(),
+        name='user-vehicle-reports-list'
+    ),
+    path(
+        'enterprises/<int:enterprise_id>/vehicles/<int:vehicle_id>/reports/<int:report_id>',
+        UserReportsMileageDetail.as_view(),
+        name='user-vehicle-reports-detail'
     ),
 ]

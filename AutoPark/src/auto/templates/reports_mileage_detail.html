@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% load get_value_from_dict %}
+
+
+{% block head %}
+    {{ block.super }}
+    <script type="text/javascript">
+
+        function set_date_range(){
+            date_from_elem = document.querySelector("#time_from");
+            date_to_elem = document.querySelector("#time_to");
+            report_period = document.querySelector("#report_period")
+            btn = document.querySelector("#request_btn");
+            request_data = `?time_from=${date_from_elem.value}&time_to=${date_to_elem.value}&report_period=${report_period.value}`;
+            window.location.href = request_data
+        }
+
+        function translate_to_human(type_mapper, current_value) {
+            return type_mapper[current_value]
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <div> {{ report.name }}</div>
+    {% if report %}
+        {% for date, value in report.result.items %}
+            <p>{{ date }} - {{ value }}</p>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

@@ -12,6 +12,7 @@ from auto.api.serializers import (
     GeotagSerializer,
     GeotagGeoJsonSerializer,
     TripSerializer,
+    MileageReportSerializer,
 )
 
 from auto.models import (
@@ -21,6 +22,7 @@ from auto.models import (
     Vehicle,
     Geotag,
     Trip,
+    MileageReport,
 )
 from auto.permissions import IsSameEnterprise, IsManager
 from app.settings import env
@@ -190,3 +192,11 @@ class TripViewSet(ModelViewUTC):
         if not location:
             return "Undefined"
         return str(location)
+
+
+class MileageReportViewSet(ModelViewSet):
+    """Представление для отчетов по пробегу"""
+
+    queryset = MileageReport.objects.all()
+    serializer_class = MileageReportSerializer
+    permission_classes = [IsAuthenticated]

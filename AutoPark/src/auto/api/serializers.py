@@ -10,6 +10,7 @@ from auto.models import (
     Driver,
     Geotag,
     Trip,
+    MileageReport,
 )
 
 
@@ -187,3 +188,11 @@ class TripSerializer(serializers.ModelSerializer):
             # initial=lambda: instance.time_of_purchase.strftime("%%Y-%%m-%%d %%H:%%M")
         )
         return super().to_representation(instance)
+
+
+class MileageReportSerializer(serializers.ModelSerializer):
+    """Сериалайзер для отчетов по пробегу."""
+
+    class Meta:
+        model = MileageReport
+        fields = '__all__'

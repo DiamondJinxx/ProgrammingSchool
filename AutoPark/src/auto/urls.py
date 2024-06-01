@@ -7,6 +7,7 @@ from auto.api.views import (
     GeotagViewSet,
     TripGeotagsViewSet,
     TripViewSet,
+    MileageReportViewSet,
 )
 
 
@@ -17,6 +18,7 @@ router.register('/vehicles/(?P<vehicle_id>.+)/trips/geo', TripGeotagsViewSet)
 router.register('/vehicles/(?P<vehicle_id>.+)/trips', TripViewSet)
 router.register('/enterprises', EnterpriseViewSet)
 router.register('/drivers', DriversViewSet)
+router.register('/reports', MileageReportViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

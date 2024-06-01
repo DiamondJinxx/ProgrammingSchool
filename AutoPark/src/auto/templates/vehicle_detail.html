@@ -15,6 +15,7 @@
 {#    {% endfor %}#}
     <div>
         {% bootstrap_button 'Поездки' href='trips' %}
+        {% bootstrap_button 'Отчеты' href='reports' %}
     </div>
 
 <form action="{% url 'user-vehicle-detail' enterprise_id=vehicle.enterprise_id vehicle_id=vehicle.id %}" method="POST">

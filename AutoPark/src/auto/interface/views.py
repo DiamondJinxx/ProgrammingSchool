@@ -124,3 +124,60 @@ class UserTripsList(APIView):
             "time_to": str(time_to),
             "map_api_key": env("GEODECODER_API_KEY"),
         })
+
+
+class UserReportsList(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'reports_list.html'
+
+    def get(self, request, enterprise_id, vehicle_id):
+        time_from = self.request.query_params.get('time_from')
+        time_to = self.request.query_params.get('time_to')
+        report_period = self.request.query_params.get('report_period')
+        if not time_from or not time_to or not report_period:
+            return Response({
+                "reports": [],
+                "types": {report_type.value: report_type.name for report_type in models.AbstractReport.PeriodType},
+                "type_mapper": {
+                    models.AbstractReport.PeriodType.DAY: "По дням",
+                    models.AbstractReport.PeriodType.MONTH: "По месяцам",
+                    models.AbstractReport.PeriodType.HALF_YEAR: "По полугодиям",
+                },
+                "start_date": '',
+                "end_date": '',
+            })
+        time_from = datetime.datetime.fromisoformat(time_from)
+        time_to = datetime.datetime.fromisoformat(time_to)
+        type_to_strategy_mapper = {
+            models.AbstractReport.PeriodType.DAY: "По дням",
+        },
+
+        reports = models.MileageReport.objects.filter(
+            start_date__gte=set_utc(time_from),
+            end_date__lte=set_utc(time_to),
+            vehicle__id=vehicle_id,
+            period=str(report_period),
+        )
+        print(reports.query)
+        return Response({
+            "reports": reports,
+            "types": {report_type.value: report_type.name for report_type in models.AbstractReport.PeriodType},
+            "type_mapper": {
+                models.AbstractReport.PeriodType.DAY: "По дням",
+                models.AbstractReport.PeriodType.MONTH: "По месяцам",
+                models.AbstractReport.PeriodType.HALF_YEAR: "По полугодиям",
+            },
+            "start_date": str(time_from),
+            "end_date": str(time_to),
+        })
+
+
+class UserReportsMileageDetail(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'reports_mileage_detail.html'
+
+    def get(self, request, enterprise_id, vehicle_id, report_id):
+        report = models.MileageReport.objects.get(id=report_id)
+        return Response({
+            "report": report,
+        })

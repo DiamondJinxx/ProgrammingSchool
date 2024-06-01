@@ -19,9 +19,15 @@
                         coordinates: {{ trip.points }}
                     },
                     properties: {
-                        hintContent: "{{ trip }}"
-                    }
-                });
+                        hintContent: "{{ trip }}",
+                    }},
+                    {
+                        // Установка ширины до 5 пикселей.
+                        strokeWidth: 5,
+                        // Установка цвета линии.
+                        strokeColor: "#FF0000"
+                    },
+                );
                 myMap.geoObjects.add(myPolyline);
             {% endfor %}
 
