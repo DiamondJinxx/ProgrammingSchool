@@ -188,12 +188,12 @@ class TeachersHandler(HandlerInterface):
 	) -> None:  
 		...
 
-	def can_handle_event(self, event_data: CallbackData) -> bool:  
-		event = json.loads(event_data)["event"]  
-		return event in [  
-			TeacherHandlingEvents.LIST,  
-			TeacherHandlingEvents.INFO,  
-		]
+	def can_handle_event(self, event_data: CallbackData) -> bool:
+        event = json.loads(event_data)["event"]
+        return event in [
+            TeacherHandlingEvents.LIST,
+            TeacherHandlingEvents.INFO,
+        ]
 
 
 class HandlerOrchestrator:  
@@ -647,13 +647,394 @@ def build_lessons_domain_handler(
 
 # Пример 3
 ```python
+import logging
+from datetime import datetime
+from typing import Sequence
+
+from app import crud
+from app.core.constants import AMP_CREATION_SOURCE, ST_AGENT_ACTIVE
+from app.handlers.common import get_async_session
+from app.schemas.v2.broker import (
+    ComputerHardwareRMQSchema,
+    ComputerInventoryRMQReceivedSchema,
+    HeadersRMQSchema,
+)
+from app.schemas.v2.broker.computer_software import ComputerSoftwareRMQSchema
+from app.schemas.v2.crud import (
+    ComputerCRUDCreateSchema,
+    ComputerHardwareCRUDCreateSchema,
+    ComputerHardwareCRUDGeneralSchema,
+    ComputerToInvPackCRUDCreateSchema,
+    InventoryPackageCRUDCreateSchema,
+)
+from app.utils.v2 import computer_license_recalc
+
+logger = logging.getLogger("default")
+
+
+async def computer_inventory_received(
+        data: ComputerInventoryRMQReceivedSchema,
+        headers: HeadersRMQSchema = None,  # noqa: ARG001
+) -> None:
+    """Получены данные программной и аппаратной инвентаризаций целевого компьютера."""
+    await _process_hardware_inventory(
+        hostname=data.hostname,
+        update_date=data.last_modified_date,
+        data=data.hardware
+    )
+    await _process_software_inventory(
+        hostname=data.hostname,
+        packages=data.software,
+    )
+
+
+async def _process_hardware_inventory(
+        hostname: str,
+        update_date: datetime,
+        data: ComputerHardwareRMQSchema
+) -> None:
+    """Обработка аппаратной инвентаризации"""
+    async with get_async_session() as async_session:
+        computer_mdl = await crud.v2.computer.select_one(
+            async_session=async_session,
+            hostname=hostname,
+            deleted=False,
+        )
+
+        if not computer_mdl:
+            computer_mdl = await crud.v2.computer.insert(
+                async_session=async_session,
+                obj_in=ComputerCRUDCreateSchema(
+                    hostname=hostname,
+                    creation_source=AMP_CREATION_SOURCE,
+                ),
+            )
+
+        if not computer_mdl:
+            return
+
+        hardware_data = ComputerHardwareCRUDCreateSchema(
+            **data.model_dump(),
+            update_date=update_date,
+            general=ComputerHardwareCRUDGeneralSchema.model_validate(
+                data.hardware_general
+            ),
+        )
+
+        await crud.v2.computer_hard.insert(
+            async_session=async_session,
+            computer_uid=computer_mdl.uid,
+            obj_in=hardware_data,
+        )
+        await crud.v2.computer.set_status(
+            async_session=async_session,
+            obj_id=computer_mdl.uid,
+            status=ST_AGENT_ACTIVE,
+        )
+        await computer_license_recalc(
+            async_session=async_session,
+            computer_mdl=computer_mdl,
+        )
+        await async_session.commit()
+
+
+async def _process_software_inventory(
+        hostname: str,
+        packages: Sequence[ComputerSoftwareRMQSchema]
+) -> None:
+    """Обработка программной инвентаризации"""
+    async with get_async_session() as async_session:
+        computer_mdl = await crud.v2.computer.select_one(
+            async_session=async_session,
+            hostname=hostname,
+            deleted=False,
+        )
+        if not computer_mdl:
+            return
+
+        await computer_mdl.awaitable_attrs.inv_packages
+        computer_mdl.inv_packages.clear()
+
+        for package_info in packages:
+            inventory_package = await crud.v2.inventory_package.select_one(
+                async_session=async_session,
+                name=package_info.name,
+                version=package_info.version,
+                arch=package_info.arch,
+            )
+            if not inventory_package:
+                inv_package_obj_in = InventoryPackageCRUDCreateSchema(
+                    name=package_info.name,
+                    version=package_info.version,
+                    arch=package_info.arch,
+                )
+                inventory_package = await crud.v2.inventory_package.insert(
+                    async_session=async_session,
+                    obj_in=inv_package_obj_in,
+                )
+                if not inventory_package:
+                    logger.warning(
+                        "Запись inventory_package не создана: %s",
+                        inv_package_obj_in.model_dump_json(),
+                    )
+                    continue
+
+            await crud.v2.computer_to_inventory_package.insert(
+                async_session=async_session,
+                obj_in=ComputerToInvPackCRUDCreateSchema(
+                    computer_uid=computer_mdl.uid,
+                    inv_pack_uid=inventory_package.uid,
+                    install_date=package_info.install_date,
+                ),
+            )
+
+        await async_session.commit()
 ```
 ## п.2
+Выше приведен пример кода для обработки поступления информации о компьютера - об аппаратных составляющий и об установленных программах. Дизайн кода подразумевает доменное разделение, но в данном случае код болтается в воздухе. Большая цикломатическая сложность небольшой беспорядок. В системе нет другой информации о компьютере - аппаратная и программные части хранят в себе всю информацию о составляющих компьютера - поэтому добавление новых "обработчиков" не требуется, и я предпочту внедрить сервисный слой(поправив так же архитектуру сервиса в целом, внедрив слои инфраструктуры и выделив агрегатные модели) с максимально глупым интерфейсом.
 
 ## п.3 
 **Исправленная версия примера 3:
 
 ```python
+import logging
+from typing import List, Optional
+
+from acm_lib_message_broker import schemas
+
+from modules import types
+from modules.utils.datetime_tz import aware_now, init_utc_tz
+from modules.web.app.aggregators.models.v2 import (
+    ComputerInventory,
+    InventoryPackage,
+)
+from modules.web.app.infrastructure.rmq.adapters.v2.computers import AbstractComputersRMQAdapter
+from modules.web.app.infrastructure.rmq.adapters.v2.groups.interface import AbstractGroupsRMQAdapter
+
+from . import exceptions
+from .unit_of_work import AbstractComputerInventorySystemUnitOfWork
+
+
+class ComputerInventorySystemService:
+    """Системный сервис инвентаризации."""
+
+    def __init__(
+        self,
+        unit_of_work: AbstractComputerInventorySystemUnitOfWork,
+        rmq_adapter: AbstractComputersRMQAdapter,
+        rmq_groups_adapter: AbstractGroupsRMQAdapter,
+        logger: Optional[logging.Logger] = None,
+    ) -> None:
+        """
+        Конструктор сервиса инвентаризации.
+
+        Args:
+            unit_of_work: Объект шаблона Единица работы.
+            rmq_adapter: Адаптер для RMQ.
+            rmq_groups_adapter: Адаптер для RMQ для событий групп.
+            logger: Логгер.
+        """
+        self._uow = unit_of_work
+        self._rmq = rmq_adapter
+        self._rmq_groups = rmq_groups_adapter
+        self._logger = logger or logging.getLogger("default")
+
+    async def _get_or_create_computer(
+        self,
+        uow: AbstractComputerInventorySystemUnitOfWork,
+        hostname: types.Hostname,
+        segment_uid: types.SegmentUID,
+    ) -> ComputerInventory:
+        """
+        Получить или создать модель целевого компьютера с инвентаризацией.
+
+        Args:
+            uow: Единица работы для сервиса инвентаризации
+            hostname: Сетевое имя целевого компьютера.
+            segment_uid: ID сегмента, к которому принадлежит агент компьютера.
+
+        Returns:
+            Модель целевого компьютера с инвентаризацией.
+        """
+        computer_agg = await uow.computers_repo.get_by_hostname(hostname)
+
+        if not computer_agg:
+            directory = await uow.directories_repo.get_default_directory()
+            computer_agg = ComputerInventory.create(
+                hostname=hostname,
+                mac_address=None,
+                comment=None,
+                created_by=None,
+                create_date=aware_now(),
+                directory=directory,
+            )
+            computer_agg.set_agent_active(aware_now())
+            computer_agg.set_agent_segment(segment_uid=segment_uid, update_date=aware_now())
+            await uow.computers_repo.create(computer_agg)
+            await uow.commit()
+            await self._rmq.send_created_message(computer_agg.computer)
+            await self._rmq_groups.send_computer_added_message(directory, computer_agg.computer)
+        else:
+            computer_agg.set_agent_active(aware_now())
+            computer_agg.set_agent_segment(segment_uid=segment_uid, update_date=aware_now())
+            await uow.computers_repo.update(computer_agg)
+
+        return computer_agg
+
+    async def _take_software(
+        self,
+        uow: AbstractComputerInventorySystemUnitOfWork,
+        computer: ComputerInventory,
+        software: List[schemas.ComputerSoftwareSchema],
+    ) -> None:
+        """
+        Провести программную инвентаризацию.
+
+        Args:
+            uow: Единица работы для сервиса инвентаризации
+            computer: Модель целевого компьютера с инвентаризацией.
+            hostname: Сетевое имя целевого компьютера.
+            software: Данные программной инвентаризации
+        """
+        computer.unlink_all_inv_packages()
+        for package_info in software:
+            inventory_package = await uow.inv_packages_repo.get_by_unique_fields(
+                name=package_info.name,
+                version=package_info.version,
+                arch=package_info.arch,
+            )
+            if not inventory_package:
+                inventory_package = InventoryPackage.create(
+                    name=package_info.name,
+                    version=package_info.version,
+                    arch=package_info.arch,
+                )
+                await uow.inv_packages_repo.create(inventory_package)
+            computer.link_inv_package(
+                inv_package_uid=inventory_package.uid,
+                install_date=init_utc_tz(package_info.install_date) if package_info.install_date else None,
+            )
+
+    async def _take_hardware(
+        self,
+        computer: ComputerInventory,
+        hardware: schemas.ComputerHardwareSchema,
+    ) -> None:
+        """
+        Провести аппаратную инвентаризацию.
+
+        Args:
+            uow: Единица работы для сервиса инвентаризации
+            computer: Модель целевого компьютера с инвентаризацией.
+            hardware: Данные аппаратной инвентаризации
+        """
+        update_date = aware_now()
+        computer.set_hardware(
+            update_date=update_date,
+            system=types.ComputerHardwareSystem.model_validate(hardware.system) if hardware.system else None,
+            salt=types.ComputerHardwareSalt.model_validate(hardware.salt) if hardware.salt else None,
+            general=types.ComputerHardwareGeneral.model_validate(hardware.general) if hardware.general else None,
+            memory=types.ComputerHardwareMemory.model_validate(hardware.memory) if hardware.memory else None,
+            cpu=types.ComputerHardwareCPU.model_validate(hardware.cpu) if hardware.cpu else None,
+            disk=types.ComputerHardwareDisk.model_validate(hardware.disk) if hardware.disk else None,
+            lvm=types.ComputerHardwareLVM.model_validate(hardware.lvm) if hardware.lvm else None,
+            volume=types.ComputerHardwareVolume.model_validate(hardware.volume) if hardware.volume else None,
+            network=types.ComputerHardwareNetwork.model_validate(hardware.network) if hardware.network else None,
+            dns=types.ComputerHardwareDNS.model_validate(hardware.dns) if hardware.dns else None,
+            gpu=types.ComputerHardwareGPU.model_validate(hardware.gpu) if hardware.gpu else None,
+            monitor=types.ComputerHardwareMonitor.model_validate(hardware.monitor) if hardware.monitor else None,
+        )
+
+    async def take_inventory(
+        self,
+        hostname: types.Hostname,
+        segment_uid: types.SegmentUID,
+        software: Optional[List[schemas.ComputerSoftwareSchema]],
+        hardware: Optional[schemas.ComputerHardwareSchema],
+    ) -> None:
+        """
+        Провести инвентаризацию.
+
+        Args:
+            hostname: Сетевое имя целевого компьютера.
+            segment_uid: ID сегмента, к которому принадлежит агент компьютера.
+            software: данные программной инвентаризации
+            hardware: данные аппаратной инвентаризации
+        """
+        if not hardware and not software:
+            msg = f'Данные инвентаризации для компьютера "{hostname}" отсутствуют.'
+            raise exceptions.ComputerInventoryRequiredError(msg)
+
+        async with self._uow as uow:
+            computer = await self._get_or_create_computer(uow=uow, hostname=hostname, segment_uid=segment_uid)
+            if not computer:
+                return
+
+            if software:
+                await self._take_software(uow=uow, computer=computer, software=software)
+            else:
+                computer.unlink_all_inv_packages()
+
+            if hardware:
+                await self._take_hardware(computer=computer, hardware=hardware)
+            else:
+                computer.clear_hardware()
+
+            computer.set_agent_interaction_date(aware_now())
+
+            await uow.computers_repo.update(computer)
+            await uow.commit()
+
+    async def take_hardware(
+        self,
+        hostname: types.Hostname,
+        segment_uid: types.SegmentUID,
+        hardware: schemas.ComputerHardwareSchema,
+    ) -> None:
+        """
+        Провести аппаратную инвентаризацию.
+
+        Args:
+            hostname: Сетевое имя целевого компьютера.
+            segment_uid: ID сегмента, к которому принадлежит агент компьютера.
+            hardware: данные аппаратной инвентаризации.
+        """
+        async with self._uow as uow:
+            computer = await self._get_or_create_computer(uow=uow, hostname=hostname, segment_uid=segment_uid)
+            if not computer:
+                return
+
+            await self._take_hardware(computer=computer, hardware=hardware)
+            computer.set_agent_interaction_date(aware_now())
+
+            await uow.computers_repo.update(computer)
+            await uow.commit()
+
+    async def take_software(
+        self,
+        hostname: types.Hostname,
+        segment_uid: types.SegmentUID,
+        software: List[schemas.ComputerSoftwareSchema],
+    ) -> None:
+        """
+        Провести аппаратную инвентаризацию.
+
+        Args:
+            hostname: Сетевое имя целевого компьютера.
+            segment_uid: ID сегмента, к которому принадлежит агент компьютера.
+            software: данные программной инвентаризации.
+        """
+        async with self._uow as uow:
+            computer = await self._get_or_create_computer(uow=uow, hostname=hostname, segment_uid=segment_uid)
+            if not computer:
+                return
+
+            await self._take_software(uow=uow, computer=computer, software=software)
+            computer.set_agent_interaction_date(aware_now())
+
+            await uow.computers_repo.update(computer)
+            await uow.commit()
+
 ```
 
-Итерация заняла ~80-100 минут.
+Итерация заняла ~120-180 минут.
