@@ -460,7 +460,10 @@ from src.app.types.events import LessonsHandlingEvents
   
 from .base import HandlerInterface
 
+
 class ActionHandlerInterface(abc.ABC):
+    """Интерфейс обработчика действия пользователя."""
+
 	@abc.abstractmethod
 	def handle(
 		bot: Telebot,
@@ -468,6 +471,7 @@ class ActionHandlerInterface(abc.ABC):
         action_data: ActionData,  
 	) -> None:
 	"""Обработать действие пользователя."""
+
 
 class DomainHandlerInterface(abc.ABC):  
     """Интерфейс обработчиков событий/действий доменных областей."""  
@@ -572,7 +576,8 @@ class LessonSignUpEndActionHandler(ActionHandlerInterface):
 		    self._bot.send_message(  
 		        chat_id,  
 		        f"Уведомление о записи на занятие отправлено менеджеру и будет принято после оплаты.\n"  
-		        "Оплатите занятие любым удобным для вас способом из ниже перечисленных: "        f"{teacher.detail.payments}",  
+		        "Оплатите занятие любым удобным для вас способом из ниже перечисленных: \n"
+                f"{teacher.detail.payments}",  
 		    )  
 		    manager = teachers_repo.get_manager()  
 		    self._send_request_for_lesson_registration_to_manager(  
@@ -607,6 +612,7 @@ class LessonConfirmActionHandler(ActionHandlerInterface):
 			)  
 		return  
 
+
 class LessonsHandlingEvents(str, Enum):  
     """Множество событий в доменной области 'Занятия'"""  
   
@@ -619,22 +625,12 @@ class LessonsHandlingEvents(str, Enum):
   
 class LessonsDomainHandler(DomainHandlerInterface):  
 	"""Обработчик действий/событий в доменной области 'Занятия' """
-  
-    def can_handle_event(self, event_data: str) -> bool:  
-        event_data = json.loads(event_data)  
-        event = event_data["event"]  
-        return event in [  
-            LessonsHandlingEvents.CHOICE_DAY,  
-            LessonsHandlingEvents.CHOICE_TIME,  
-            LessonsHandlingEvents.SIGNUP_END,  
-            LessonsHandlingEvents.SIGNUP_CONFIRM,  
-        ]
 
 def build_lessons_domain_handler(
 	bot: Telebot,
 	logger: Logger,								 
 ) -> LessonsDomainHandler:
-	return LessonsDomainHandler(
+    return LessonsDomainHandler(
 		bot=bot,
 		logger=logger,
 		action_handlers_mapper={
