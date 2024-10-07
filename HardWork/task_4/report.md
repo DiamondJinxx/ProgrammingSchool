@@ -277,7 +277,8 @@ class LessonsHandlingEvents(str, Enum):
     """Множество событий в доменной области 'Занятия'"""  
   
     CHOICE_DAY = "choice_day"  
-    CHOICE_TIME = "choice_time"   SIGNUP_CONFIRM = "signup_confirm"  
+    CHOICE_TIME = "choice_time"
+    SIGNUP_CONFIRM = "signup_confirm"  
     SIGNUP_NO_CONFIRM = "signup_no_confirm"  
     SIGNUP_END = "signup_end"
   
@@ -489,30 +490,30 @@ class DomainHandlerInterface(abc.ABC):
 		self._handlers_mapper = action_handlers_mapper
   
     def take_event(  
-        self,  
-        chat_id: int,  
-        action_data: ActionData,  
-    ) -> None:  
-        """Обработка доменного пользовательского события."""  
+        self,
+        chat_id: int,
+        action_data: ActionData,
+    ) -> None:
+        """Обработка доменного пользовательского события."""
 		action_type = action_data.type
 		handler = self._handlers_mapper.get(
 			action_data.type,
 		)
-        if not handler:  
-            self._logger.debug(  
-                "Для %s отсутствует обработчик для события %s",  
-                str(type(self)),  
-                action_type,  
+        if not handler:
+            self._logger.debug(
+                "Для %s отсутствует обработчик для события %s",
+                str(type(self)),
+                action_type,
             )  
             return None  
-        return handler.handle(  
+        return handler.handle(
 			bot=self._bot,
-            chat_id=chat_id,  
-            action_data=action_data,  
+            chat_id=chat_id,
+            action_data=action_data,
         )  
 
 
-class LessonDayChoiseActionHandler(ActionHandlerInterface):
+class LessonDayChoiceActionHandler(ActionHandlerInterface):
 	"""Обработчик действия выбора дня для занятия."""
 	
 	def handle(
@@ -528,13 +529,13 @@ class LessonDayChoiseActionHandler(ActionHandlerInterface):
 			session.commit()  
 			markup = menu_builder.build_days_for_sign_up(callback_data.id)  
 			self._bot.send_message(  
-				chat_id,  
-				"Выберете день",  
-				reply_markup=markup,  
-			)  
+				chat_id,
+				"Выберете день",
+				reply_markup=markup,
+			)
 		return  
 
-class LessonTimeChoiseActionHandler(ActionHandlerInterface):
+class LessonTimeChoiceActionHandler(ActionHandlerInterface):
 	"""Обработчик действия выбора времени для занятия."""
 	
 	def handle(
@@ -542,14 +543,14 @@ class LessonTimeChoiseActionHandler(ActionHandlerInterface):
         chat_id: int,  
         action_data: ActionData,  
 	) -> None:
-		with session_factory() as session:  
-		    repo = CallbackDataRepo(session)  
-		    cb_data = repo.get_by_id(action_data.cb_id)  
-		    cb_data.day = action_data.time  
-		    repo.update(cb_data)  
-		    session.commit()  
-		    markup = menu_builder.build_hours_for_sign_up(cb_id=cb_data.id)  
-		    self._bot.send_message(  
+        with session_factory() as session:
+            repo = CallbackDataRepo(session)
+            cb_data = repo.get_by_id(action_data.cb_id)
+            cb_data.day = action_data.time
+            repo.update(cb_data)
+            session.commit()
+            markup = menu_builder.build_hours_for_sign_up(cb_id=cb_data.id)
+		    self._bot.send_message(
 		        chat_id,  
 		        "Выберете время",  
 		        reply_markup=markup,  
@@ -561,30 +562,30 @@ class LessonSignUpEndActionHandler(ActionHandlerInterface):
 	"""Обработчик действия окончания процесса записи на занятие."""
 	
 	def handle(
-        self,  
-        chat_id: int,  
-        action_data: ActionData,  
+        self,
+        chat_id: int,
+        action_data: ActionData,
 	) -> None:
-		with session_factory() as session:  
-		    repo = CallbackDataRepo(session)  
-		    cb_data = repo.get_by_id(action_data.cb_id)  
-		    cb_data.time = action_data.time
-		    repo.update(cb_data)  
-		    session.commit()  
-		    teachers_repo = TeachersRepo(session)  
-		    teacher = teachers_repo.get_by_id(cb_data.teacher_id)  
-		    self._bot.send_message(  
-		        chat_id,  
-		        f"Уведомление о записи на занятие отправлено менеджеру и будет принято после оплаты.\n"  
-		        "Оплатите занятие любым удобным для вас способом из ниже перечисленных: \n"
-                f"{teacher.detail.payments}",  
-		    )  
-		    manager = teachers_repo.get_manager()  
-		    self._send_request_for_lesson_registration_to_manager(  
-		        manager=manager,  
-		        teacher=teacher,  
-		        cb_data=cb_data,  
-		    )  
+        with session_factory() as session:  
+            repo = CallbackDataRepo(session)  
+            cb_data = repo.get_by_id(action_data.cb_id)  
+            cb_data.time = action_data.time
+            repo.update(cb_data)  
+            session.commit()  
+            teachers_repo = TeachersRepo(session)  
+            teacher = teachers_repo.get_by_id(cb_data.teacher_id)  
+            self._bot.send_message(  
+                chat_id,  
+                f"Уведомление о записи на занятие отправлено менеджеру и будет принято после оплаты.\n"  
+                "Оплатите занятие любым удобным для вас способом из ниже перечисленных: \n"
+                f"{teacher.detail.payments}",
+            )
+            manager = teachers_repo.get_manager()
+		    self._send_request_for_lesson_registration_to_manager(
+                manager=manager,
+                teacher=teacher,
+                cb_data=cb_data,
+            )  
 		return
 
 
@@ -596,20 +597,20 @@ class LessonConfirmActionHandler(ActionHandlerInterface):
         chat_id: int,  
         action_data: ActionData,  
 	) -> None:
-		with session_factory() as session:  
-			cb_data_repo = CallbackDataRepo(session)  
-			cb_data = cb_data_repo.get_by_id(action_data.cb_id)  
-			teachers_repo = TeachersRepo(session)  
-			teacher = teachers_repo.get_by_id(cb_data.teacher_id)  
-			self._notify_user_about_confirm(  
-				chat_id=chat_id,  
-				teacher=teacher,  
-			)  
-			self._notify_teacher_about_confirm(  
-				teacher=teacher,  
-				cb_data=cb_data,  
-				user="Симпотичный Дима",  
-			)  
+        with session_factory() as session:  
+            cb_data_repo = CallbackDataRepo(session)
+            cb_data = cb_data_repo.get_by_id(action_data.cb_id)
+			teachers_repo = TeachersRepo(session)
+			teacher = teachers_repo.get_by_id(cb_data.teacher_id)
+            self._notify_user_about_confirm(
+                chat_id=chat_id,
+                teacher=teacher,  
+			)
+            self._notify_teacher_about_confirm(
+                teacher=teacher,
+                cb_data=cb_data,
+                user="Симпотичный Дима",  
+			)
 		return  
 
 
@@ -626,6 +627,7 @@ class LessonsHandlingEvents(str, Enum):
 class LessonsDomainHandler(DomainHandlerInterface):  
 	"""Обработчик действий/событий в доменной области 'Занятия' """
 
+
 def build_lessons_domain_handler(
 	bot: Telebot,
 	logger: Logger,								 
@@ -634,11 +636,11 @@ def build_lessons_domain_handler(
 		bot=bot,
 		logger=logger,
 		action_handlers_mapper={
-            LessonsHandlingEvents.CHOICE_DAY.value = LessonDayChoiseActionHandler, 
-            LessonsHandlingEvents.CHOICE_TIME.value = LessonTimeChoiseActionHandler,  
-            LessonsHandlingEvents.SIGNUP_END.value = LessonSignUpEndActionHandler,   
-            LessonsHandlingEvents.SIGNUP_CONFIRM.value = LessonConfirmActionHandler,  
-		}
+            LessonsHandlingEvents.CHOICE_DAY.value = LessonDayChoiceActionHandler
+            LessonsHandlingEvents.CHOICE_TIME.value = LessonTimeChoiceActionHandler,
+            LessonsHandlingEvents.SIGNUP_END.value = LessonSignUpEndActionHandler,
+            LessonsHandlingEvents.SIGNUP_CONFIRM.value = LessonConfirmActionHandler,
+        }
 	)
 ```
 Итерация заняла ~80-100 минут.
