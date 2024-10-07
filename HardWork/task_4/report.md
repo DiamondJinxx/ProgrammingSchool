@@ -14,21 +14,21 @@ from src.app.menu import specializations as menu_builder
 
 
 def handle_events(event_date):
-	event_data = json.loads(event_data)  
-    incoming_event = event_data["event"]  
-    self._logger.debug(  
-        "%s: Обработчик вызван для события %s",  
-        str(type(self)),  
+    event_data = json.loads(event_data)
+    incoming_event = event_data["event"]
+    self._logger.debug(
+        "%s: Обработчик вызван для события %s",
+        str(type(self)),
         incoming_event,  
-    )  
+    )
     with session_factory() as session:  
-        specialization_select_stmt = select(Specialization)  
-        if self._is_specializtion_list_view_needed(incoming_event):  
+        specialization_select_stmt = select(Specialization)
+        if self._is_specialization_list_view_needed(incoming_event):  
             specializations = session.scalars(
 	            specialization_select_stmt,
-            ).all()  
+            ).all()
             markup = menu_builder.build_specializations_list(
-	            specializations,
+                specializations,
             )
             self._bot.send_message(  
                 chat_id,  
