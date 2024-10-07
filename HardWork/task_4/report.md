@@ -600,8 +600,8 @@ class LessonConfirmActionHandler(ActionHandlerInterface):
         with session_factory() as session:  
             cb_data_repo = CallbackDataRepo(session)
             cb_data = cb_data_repo.get_by_id(action_data.cb_id)
-			teachers_repo = TeachersRepo(session)
-			teacher = teachers_repo.get_by_id(cb_data.teacher_id)
+            teachers_repo = TeachersRepo(session)
+            teacher = teachers_repo.get_by_id(cb_data.teacher_id)
             self._notify_user_about_confirm(
                 chat_id=chat_id,
                 teacher=teacher,  
