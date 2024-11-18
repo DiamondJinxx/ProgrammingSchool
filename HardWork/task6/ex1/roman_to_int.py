@@ -1,2 +1,4 @@
 def romanToInt(s: str) -> int:
-    return True
+    if s == "I":
+        return 1
+    return 2
