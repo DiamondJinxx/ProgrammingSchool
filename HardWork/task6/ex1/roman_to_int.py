@@ -4,6 +4,7 @@ def romanToInt(roman: str) -> int:
     roman_to_int_map = {
         "I": 1,
         "V": 5,
+        "X": 10,
     }
     roman = roman[::-1]
     integer = 0

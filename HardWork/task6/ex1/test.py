@@ -16,7 +16,13 @@ def test_basic_sub_to_int() -> None:
     assert result == 4
 
 def test_sum() -> None:
-    origin = "VIII"
-    result = romanToInt(origin)
-    assert result == 8
+    origins_with_expected_results = {
+        "VIII": 8,
+        "XVIII": 18,
+        "XV": 15,
+        "XII": 12,
+    }
+    for origin, expected_result in origins_with_expected_results.items():
+        result = romanToInt(origin)
+        assert result == expected_result
 
