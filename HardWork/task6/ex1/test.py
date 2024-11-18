@@ -9,3 +9,8 @@ def test_basic_sum_to_int() -> None:
     origin = "II"
     result = romanToInt(origin)
     assert result == 2
+
+def test_basic_sub_to_int() -> None:
+    origin = "IV"
+    result = romanToInt(origin)
+    assert result == 4
