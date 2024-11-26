@@ -11,3 +11,8 @@ def test_missing_number_return_number() -> None:
     result = missing_number(data)
     assert result == 2
 
+def test_complex_seq() -> None:
+    data = [1,2,3,0,5,6]
+    result = missing_number(data)
+    assert result == 4
+
