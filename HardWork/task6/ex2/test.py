@@ -16,3 +16,7 @@ def test_complex_seq() -> None:
     result = missing_number(data)
     assert result == 4
 
+def test_second_complex_seq() -> None:
+    data = [1,2,3,4,0,6]
+    result = missing_number(data)
+    assert result == 5
