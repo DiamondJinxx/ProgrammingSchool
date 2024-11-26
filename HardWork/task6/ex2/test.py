@@ -6,3 +6,8 @@ def test_simple_missung_number() -> None:
     result = missing_number(data)
     assert result
 
+def test_missing_number_return_number() -> None:
+    data = [1,0,3]
+    result = missing_number(data)
+    assert result == 2
+
