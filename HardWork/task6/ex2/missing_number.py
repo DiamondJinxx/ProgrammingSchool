@@ -1,2 +1,2 @@
-def missing_number(nums: list[int]) -> None:
-    return
+def missing_number(nums: list[int]) -> bool:
+    return True
