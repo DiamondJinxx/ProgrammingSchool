@@ -1,4 +1,5 @@
-
+# Описание задачи https://leetcode.com/problems/merge-intervals/description/
+#
 def merge(intervals: list[list[int]]) -> list[list[int]]:
     intervals.sort(key=lambda interval: interval[0])
     result = [intervals[0]]
