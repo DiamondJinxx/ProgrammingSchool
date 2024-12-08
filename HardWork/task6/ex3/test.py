@@ -10,3 +10,7 @@ def test_when_intervals_dont_have_intesaction() -> None:
     result = merge(data)
     assert result == [[1,3], [4,5]]
 
+def test_when_frist_interval_inside_second() -> None:
+    data = [[3,4], [1,5]]
+    result = merge(data)
+    assert result == [[1,5]]
