@@ -19,3 +19,8 @@ def test_many_intervals() -> None:
     data = [[1,3], [2,5], [6, 8]]
     result = merge(data)
     assert result == [[1,5], [6,8]]
+
+def test_complex_intervals() -> None:
+    data = [[1,3],[2,6],[8,10],[15,18]]
+    result = merge(data)
+    assert result == [[1,6], [8,10], [15,18]]
