@@ -1,0 +1,3 @@
+
+def merge() -> None:
+    ...
