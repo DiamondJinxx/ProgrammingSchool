@@ -29,7 +29,17 @@ class AbstractLinkedList(Generic[T], abc.ABC):
     REMOVE_ERR = 2 # список пуст
 
     ADD_TO_EMPTY_OK = 0 # последний вызок add_to_empty() отработал нормально
-    ADD_TO_EMPTY_ERR = 0 # список не пуст
+    ADD_TO_EMPTY_ERR = 1 # список не пуст
+
+    REPLACE_OK = 0 # последний вызок replace() отработал нормально
+    REPLACE_ERR = 1 # список пуст
+    
+    FIND_OK = 0 # последний вызок find() отработал нормально
+    FIND_NOT_VALUE = 1 # последний вызок find() отработал нормально, но не было найдено искомое значение
+    FIND_ERR = 2 # список пуст
+
+    REMOVE_ALL_OK = 0 # последний вызок remove_all() отработал нормально
+    REMOVE_ALL_ERR = 1 # список пуст
     
     # команды
 
@@ -79,6 +89,29 @@ class AbstractLinkedList(Generic[T], abc.ABC):
     @abc.abstractmethod
     def add_to_empty(self, value: T):
         """Добавить новый узел с заданным значением в пустой список"""
+    
+    # постусловие: в список добавляется первый узел с заданным значением
+    @abc.abstractmethod
+    def add_tail(self, value: T):
+        """Добавить новый узел с заданным значением в хвост списка"""
+
+    # предусловие: список не пуст
+    # постусловие: для текущего узла заменяется значение на заданное
+    @abc.abstractmethod
+    def replace(self, value: T):
+        """Заменить значение текущего узла на заданное"""
+
+    # предусловие: список не пуст
+    # постусловие: удаляются все узлы с заданным значением
+    @abc.abstractmethod
+    def remove_all(self, value: T):
+        """Удалить все узлы с заданным значением"""
+    
+    # предусловие: список не пуст
+    # постусловие: курсор устанавливается на узел с искомым значением
+    @abc.abstractmethod
+    def find(self):
+        """Установить курсор на следующий узел с искомым значением"""
 
     # запросы
 
@@ -90,6 +123,18 @@ class AbstractLinkedList(Generic[T], abc.ABC):
     @abc.abstractmethod
     def size(self) -> int:
         """Получить количество узлов в списке"""
+
+    @abc.abstractmethod
+    def is_head(self) -> int:
+        """Находится ли курсор в начале списка?"""
+
+    @abc.abstractmethod
+    def is_tail(self) -> int:
+        """Находится ли курсор в конце списка?"""
+
+    @abc.abstractmethod
+    def is_value(self) -> int:
+        """Установлен ли курсор на какой-либо узел?"""
 
     # дополнительные запросы
     @abc.abstractmethod
@@ -123,3 +168,15 @@ class AbstractLinkedList(Generic[T], abc.ABC):
     @abc.abstractmethod
     def get_add_to_empty_status() -> int:
         """Получить статус выполнения команды add_to_empty. Возвращает значение ADD_TO_EMPTY_*"""
+
+    @abc.abstractmethod
+    def get_replace_status() -> int:
+        """Получить статус выполнения команды replace. Возвращает значение REPLACE_*"""
+
+    @abc.abstractmethod
+    def get_find_status() -> int:
+        """Получить статус выполнения команды find. Возвращает значение FIND_*"""
+
+    @abc.abstractmethod
+    def get_remove_all_status() -> int:
+        """Получить статус выполнения команды remove_all. Возвращает значение REMOVE_ALL*"""
