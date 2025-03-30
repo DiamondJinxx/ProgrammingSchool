@@ -1,5 +1,40 @@
 ### Пример 1.1
+```python
+
+class Directory:
+    ...
+    childrens: list[Self]
+
+    @property
+    def is_leaf(self) -> bool:
+        return not self.childrens
+
+# в тестах
+def test_add_children_directory() -> None:
+    """Тест добавления дочерних директорий"""
+    directory = DirectoryFactory()
+    childrens = [ DirectoryFactory() for i in range(5)]
+    directory.add_childrens(childrens)
+    assert childrens == directory.childrens
+    assert not directory.is_leaf
+
+```
 ###  1.1 Исправленная версия
+```python
+
+class Directory:
+    ...
+    childrens: list[Self]
+
+# Нигде в бизнес логике не используется данный метод, собственно тут целесообразно его полностью удалить
+def test_add_children_directory() -> None:
+    """Тест добавления дочерних директорий"""
+    directory = DirectoryFactory()
+    childrens = [ DirectoryFactory() for i in range(5)]
+    directory.add_childrens(childrens)
+    assert childrens == directory.childrens
+
+```
 ### Пример 1.2
 ###  1.2 Исправленная версия
 ### Пример 1.3
