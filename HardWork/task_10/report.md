@@ -36,7 +36,190 @@ def test_add_children_directory() -> None:
 
 ```
 ### Пример 1.2
+```python
+# я не нашел большего уровня вложенности вызовов методов :(
+class ResponseActiveCentralRepoServerHandler(
+    AbstractHandler[ResponseActiveCentralRepositoryServiceMessageSchema]
+):
+    _body_schema = ResponseActiveCentralRepositoryServiceMessageSchema
+
+    async def run(self) -> None:
+        """Запуск обработчика."""
+        accept_handler = build_command_handler()
+        await accept_handler.handle(
+            server_hostname=self.body.hostname,
+            server_ip_address=str(self.body.ip_address) if self.body.ip_address is not None else None,
+            server_mac_address=self.body.mac_address,
+            server_port=cast(int, self.body.port),
+        )
+
+class AcceptRepoCommandHandler:
+
+    async def handle(
+        self,
+        server_hostname: apps_types.Hostname | None,
+        server_mac_address: apps_types.MacAddress | None,
+        server_ip_address: apps_types.IPAddress | None,
+        server_port: apps_types.Port,
+    ) -> apps_types.ServerUID:
+        """
+        Синхронизировать данные по серверу.
+
+        Args:
+            server_hostname: имя хоста сервера
+            server_mac_address: mac адрес сервера
+            server_ip_address: ip адрес хоста сервера
+            server_port: Сетевой порт сервера
+        """
+        server = RepoServer.create(
+            create_date=aware_now(),
+            hostname=server_hostname,
+            ip_address=server_ip_address,
+            port=server_port,
+            mac_address=server_mac_address,
+            segment_uid=None,
+        )
+
+        return server.uid
+
+class RepoServer(Base, CreatingDateMixin, DeletingMixin):
+    """Сущность сервер репозиториeв"""
+
+    ...
+
+    @classmethod
+    def create(
+        cls,
+        hostname: apps_types.Hostname | None,
+        ip_address: apps_types.IPAddress | None,
+        port: apps_types.Port,
+        mac_address: apps_types.MacAddress | None,
+        create_date: dt.datetime,
+        segment_uid: apps_types.SegmentUID | None,
+    ) -> Self:
+        """
+        Создать сервер
+
+        Args:
+            hostname: Доменное имя сетевого узла.
+            ip_address: IP-адрес сетевого узла.
+            port: Сетевой порт сервера.
+            mac_address: MAC-адрес сетевого узла.
+            segment_uid: UID сегмента, к которому привязывается сервер.
+            create_date: Дата добавления записи сервера
+        """
+        uid = uuid4()
+        created_obj = cls(
+            uid=uid,
+            hostname=hostname,
+            ip_address=ip_address,
+            port=port,
+            mac_address=mac_address,
+            segment_uid=segment_uid,
+            role=apps_types.ServerRole.REPO,
+            created_date=create_date,
+            deleted=False,
+            comment=None,
+        )
+        async with session_maker() as session:
+            repository = RepoServerRepository(session)
+            repository.create(created_obj)
+
+        return created_obj
+```
 ###  1.2 Исправленная версия
+```python
+
+class ResponseActiveCentralRepoServerHandler(
+    AbstractHandler[ResponseActiveCentralRepositoryServiceMessageSchema]
+):
+    _body_schema = ResponseActiveCentralRepositoryServiceMessageSchema
+
+    async def run(self) -> None:
+        """Запуск обработчика."""
+        accept_handler = build_command_handler()
+        await accept_handler.handle(
+            server_hostname=self.body.hostname,
+            server_ip_address=str(self.body.ip_address) if self.body.ip_address is not None else None,
+            server_mac_address=self.body.mac_address,
+            server_port=cast(int, self.body.port),
+        )
+
+class AcceptRepoCommandHandler:
+
+    async def handle(
+        self,
+        server_hostname: apps_types.Hostname | None,
+        server_mac_address: apps_types.MacAddress | None,
+        server_ip_address: apps_types.IPAddress | None,
+        server_port: apps_types.Port,
+    ) -> apps_types.ServerUID:
+        """
+        Синхронизировать данные по серверу.
+
+        Args:
+            server_hostname: имя хоста сервера
+            server_mac_address: mac адрес сервера
+            server_ip_address: ip адрес хоста сервера
+            server_port: Сетевой порт сервера
+        """
+        # вынесем работу с репозиторием в сервисный слой приложения, а из агрегата уберем
+        async with self._uow as uow:
+            server = RepoServer.create(
+                create_date=aware_now(),
+                hostname=server_hostname,
+                ip_address=server_ip_address,
+                port=server_port,
+                mac_address=server_mac_address,
+                segment_uid=None,
+            )
+            await uow.servers_repo.create(server)
+            await uow.commit()
+
+        return server.uid
+
+
+class RepoServer(Base, CreatingDateMixin, DeletingMixin):
+    """Сущность сервер репозиториeв"""
+
+    ...
+
+    @classmethod
+    def create(
+        cls,
+        hostname: apps_types.Hostname | None,
+        ip_address: apps_types.IPAddress | None,
+        port: apps_types.Port,
+        mac_address: apps_types.MacAddress | None,
+        create_date: dt.datetime,
+        segment_uid: apps_types.SegmentUID | None,
+    ) -> Self:
+        """
+        Создать сервер
+
+        Args:
+            hostname: Доменное имя сетевого узла.
+            ip_address: IP-адрес сетевого узла.
+            port: Сетевой порт сервера.
+            mac_address: MAC-адрес сетевого узла.
+            segment_uid: UID сегмента, к которому привязывается сервер.
+            create_date: Дата добавления записи сервера
+        """
+        uid = uuid4()
+        return = cls(
+            uid=uid,
+            hostname=hostname,
+            ip_address=ip_address,
+            port=port,
+            mac_address=mac_address,
+            segment_uid=segment_uid,
+            role=apps_types.ServerRole.REPO,
+            created_date=create_date,
+            deleted=False,
+            comment=None,
+        )
+```
+
 ### Пример 1.3
 ```python
 async def handle(
