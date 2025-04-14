@@ -1,4 +1,5 @@
 **Пример 1**
+
 Было
 
 ```python
@@ -9,7 +10,6 @@ def build_dimension_from_extractable(ext_mdl: Extractable) -> Dimension:
     Args:
         ext_mdl: ORM модель-источник.
     """
-    lsb_distrib_description=ext_mdl.params.lsb_distrib_description or _NOT_DEFINED,
     return Dimension(
         uid=uuid.uuid4(),
         acm_uid=ext_mdl.uid,
@@ -52,6 +52,7 @@ def build_dimension_from_extractable(ext_mdl: Extractable) -> Dimension:
 ```
 
 **Пример 2**
+
 Было
 
 ```python
@@ -62,11 +63,6 @@ def build_dimension_from_extractable(ext_mdl: Extractable) -> Dimension:
     Args:
         ext_mdl: ORM модель-источник.
     """
-    # вынесем получение форматтированого значения выше
-    formatted_chassis=_format_chassis(ext_mdl.params.chassis),
-    formatted_osarch=_format_osarch(ext_mdl.params.osarch),
-    formatted_astra_modeswitch=_format_astra_modeswitch(ext_mdl.params.astra_modeswitch),
-    formatted_status=_format_status(ext_mdl.status),
     return Dimension(
         uid=uuid.uuid4(),
         acm_uid=ext_mdl.uid,
@@ -146,11 +142,11 @@ dim = get_first(list(filter(lambda dim: dim.acm_uid == ext_mdl.uid, dimensions))
 
 Стало
 
-````python
+```python
 # Развернули цепочку вызовов
 fileted_dimensions = list(filter(lambda dim: dim.acm_uid == ext_mdl.uid, dimensions))
 dim = get_first(fileted_dimensions)
-
+```
 
 **Пример 5**
 
@@ -163,15 +159,11 @@ dim = next(
     ],
     get_default_object(),
 )
-````
+```
 
 Стало
 
 ```python
 # Спрятали логику в отдельный метод
 dim = find_in_list_by_uid(needed_uid, dimesions)
-```
-
-```
-
 ```
