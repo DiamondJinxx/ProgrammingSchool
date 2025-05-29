@@ -50,7 +50,14 @@ class __General:
 class AnyObj(__General):
     """Класс доступный для модификации."""
 
-    # тайпчекер выведет ошибку
-    def copy(self) -> Self:
-        return super().copy()
 
+class MyNone(AnyObj):
+    """Замыкание системы типов снизу"""
+
+def get_any() -> AnyObj:
+    return MyNone()
+
+
+obj = get_any()
+if isinstance(obj, MyNone):
+    print("Error")
