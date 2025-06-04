@@ -98,8 +98,81 @@ def build_servers_update_service() -> ServersUpdateService:
 
 **Пример 1 Оригинал**
 
+```python
+from pydantic import BaseModel, Field
+
+class Server(BaseModel):
+	role: str = Field(
+		description="Роль сервера в системе",
+	)
+```
+
+Непонятно, какая может быть роль у сервера. Мы вроде как хотим использовать валидацию с помощью пидантика, но по сути позволяем писать произвольное значение.
+
 **Пример 1 Исправления**
+
+```python
+from enum import Enum
+from pydantic import BaseModel, Field
+
+class ServerRole(str, Enum):
+	"""Роли сервера."""
+	STORAGE = "storage"
+	REPO = "repository"
+
+
+class Server(BaseModel):
+	role: ServerRole = Field(
+		description="Роль сервера в системе",
+	)
+```
+
+Теперь мы контролируем возможные значения роли сервера и избегаем использование примитивов - использование перечисления спасает от очепяток при использовании литералов.
 
 **Пример 2 Оригинал**
 
+```python
+from enum import Enum
+from pydantic import BaseModel, Field
+
+
+class Package(BaseModel):
+	name: str = Field(
+		description="Название пакета",
+	)
+	version: str = Field(
+		description="Версия пакета",
+	)
+```
+
+Опять же, для названия и версии пакета наверняка есть какие-то недопустимые символы и маски.
+
 **Пример 2 Исправления**
+
+```python
+from enum import Enum
+from pydantic import BaseModel, Field
+
+def name_validate(value: str) -> str:
+    """Валидация поля содержащего название чего-либо."""
+	...
+
+def version_validate(value: str) -> str:
+    """Валидация поля содержащего версию чего-либо."""
+	...
+
+PackageName = Annotated[str, AfterValidator(name_validate)]
+PackageVersion = Annotated[str, AfterValidator(package_validate)]
+
+
+
+class Package(BaseModel):
+	name: PackageName = Field(
+		description="Название пакета",
+	)
+	version: PackageVersion = Field(
+		description="Версия пакета",
+	)
+```
+
+Добавив типы для названия пакетов и версии мы обезопасились от возможных невалидных значений.
