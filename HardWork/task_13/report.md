@@ -2,10 +2,72 @@
 
 **Пример 1 Оригинал**
 
+```python
+class Server:
+	"""Агрегатная модель сервера"""
+	def update(
+		self,
+		ip_address,
+		port,
+		mac_addres,
+		hostname,
+		updated_date = aware_now(),
+	) -> None:
+		...
+```
+
+В данном случае можно пропустить указание даты обновления объекта и как бы сложной ошибки в логике не будет, но можно забыть поставить правильную дату обновления там, где это важно. Можно расширить этот пример на более чувствительные участки кода.
+
 **Пример 1 Исправления**
 
+```python
+class Server:
+	"""Агрегатная модель сервера"""
+	def update(
+		self,
+		ip_address,
+		port,
+		mac_addres,
+		hostname,
+		updated_date,
+	) -> None:
+		...
+```
+
+Уберем значение по умолчанию. Лучше явно задавать нужное значение в каждой точке вызове метода.
+
 **Пример 2 Оригинал**
+
+```python
+
+# репозиторий, отвечающий за работу с пользователями в БД
+class UserRepository:
+	def get_by_id(self, id: UserId) -> UserORM | None:
+		stmt = select(User).where(User.id==id)
+		# возвращаем orm модель sqlalchemy
+		return self.session.execute(stmt)
+
+# в клиентском коде мы заставляем разработчиков отдельно проверять результат и преобразовывать его в агрегационную модель. С ORM моделью напрямую лучше не работать, ибо можно случайно сохранить в сессию левые данные. Тут мы оставляем шанс для разработчика забыть про преобразование из ORM.
+user = user_repo.get_by_id(user_id)
+if user:
+	user = User.from_orm(user)
+```
+
 **Пример 2 Исправления**
+
+```python
+
+# репозиторий, отвечающий за работу с пользователями в БД
+class UserRepository:
+	def get_by_id(self, id: UserId) -> UserORM | None:
+		stmt = select(User).where(User.id==id)
+		result = self.session.execute(stmt)
+		# преобразуем orm модель сразу в модель-агрегатор
+		return UserAgg.from_orm(result) if result else None
+
+# теперь пользователю репозитория не нужно переживать, что при запросе он будет получать orm модель, вместо модель агрегатора, с которой должен работать.
+user = user_repo.get_by_id(user_id)
+```
 
 ## Правило 2
 
